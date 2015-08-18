@@ -23,9 +23,9 @@
                                 'options': options
                             });
                         });
-					});
-				}
-			});
+		});
+		}
+	});
                 var result = '<div><ul>';
                 $.each(questions, function(key, val) {
                 ++key;
@@ -49,7 +49,7 @@
             url: urlpassed,
             type: requestType,
             data: dynamicData,
-			async: false
+	    async: false
         });
     }
 }).call(this);
