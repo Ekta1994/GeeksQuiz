@@ -93,26 +93,55 @@
 				result = result + "<p> Do you want to submit : </p>";
 				result  = result +'<button type = "Submit" name = "Submit" id = "submitanswers">Submit</button>';
 				
+				result = result + '</div></ul>';
                 $('body').html(result);
 				
 				var score = [];
 				var s = 0;
-				var marks = '<ol>';
+				var marks = "";
 				
 				wrapper('#submitanswers', function(e) {
 					for(i = 0; i< size ; i++){
 						var ansSelected = $('input[name=' + i + ']:checked').attr('value');
 						score.push(ansSelected);
+						marks = marks + (i+1) + '. ' + questions[array[i]].question +'<br>';
+						
 						if ( ansSelected == questions[array[i]].answer){
 							s++;
-							marks = marks + '<li>' + ". Correct answer";
+							//$('input[name=' + i + ']:checked').attr('value').css('color', '#ff0000');
+							
+							for( var j = 0; j < questions[array[i]].options.length ; j++)
+							{
+								if ((j+1) == questions[array[i]].answer){
+									marks = marks + '<b><font color = "green" >&#10004' + '. ' + questions[array[i]].options[j] + '</font></b><br>';
+								}
+								else{
+									marks = marks + (j+1) + '. ' + questions[array[i]].options[j] + '<br>';
+								}
+							}
+							//marks = marks +  "Correct answer";
+							
 						}
 						else{
-							marks = marks + '<li>' + ". Incorrect answer, the correct answer is " + questions[array[i]].answer;
+							
+							for( var j = 0; j < questions[array[i]].options.length ; j++)
+							{
+								if ((j+1) == questions[array[i]].answer){
+									marks = marks + '<b><font color = "green" >&#10004' + '. ' + questions[array[i]].options[j] + '</font></b><br>';
+								}
+								else if ( (j+1) == ansSelected){
+									marks = marks + '<b><font color = "red" >&#x2717' + '. ' + questions[array[i]].options[j] + '</font></b><br>';
+								}
+								else{
+									marks = marks + (j+1) + '. ' + questions[array[i]].options[j] + '<br>';
+								}
+							}
+							
+							//marks = marks + "Incorrect answer, the correct answer is " + questions[array[i]].answer;
 						}
+						marks = marks + '<br><br>';
 					}
-					marks = marks + '</ol>';
-					marks = marks + "Your score is : " + s;
+					marks = marks + "<b>Your score is : " + s + '</b>';
 					$('body').html(marks);
 				});
             };
