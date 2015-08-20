@@ -77,8 +77,6 @@
                     array[counter] = array[index];
                     array[index] = temp;
                 }
-                
-                //console.log(array);
             
                 var result = '<div><ul>';
             
@@ -99,6 +97,7 @@
 				
 				var score = [];
 				var s = 0;
+				var marks = '<ol>';
 				
 				wrapper('#submitanswers', function(e) {
 					for(i = 0; i< size ; i++){
@@ -106,13 +105,15 @@
 						score.push(ansSelected);
 						if ( ansSelected == questions[array[i]].answer){
 							s++;
-							console.log((i+1) + "Correct answer");
+							marks = marks + '<li>' + ". Correct answer";
 						}
 						else{
-							console.log((i+1) + "Incorrect answer, the correct answer is " + questions[array[i]].answer);
+							marks = marks + '<li>' + ". Incorrect answer, the correct answer is " + questions[array[i]].answer;
 						}
 					}
-					console.log("Your score is " + s);
+					marks = marks + '</ol>';
+					marks = marks + "Your score is : " + s;
+					$('body').html(marks);
 				});
             };
         });
