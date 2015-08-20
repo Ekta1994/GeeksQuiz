@@ -5,8 +5,6 @@
 				cb(e);
 			});
 		}
-
-        $( "#submit" ).draggable();
 				
         wrapper('#submit', function(e){
             e.preventDefault();
@@ -79,8 +77,8 @@
                     array[counter] = array[index];
                     array[index] = temp;
                 }
-            
-                var result = '<div><ul>';
+
+                var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';
             
                 for(i=0;i<size;i++){
                     result = result + '<li>';
@@ -97,6 +95,7 @@
 				
 				result = result + '</div></ul>';
                 $('body').html(result);
+                $('body').scrollTop(0);
 				
 				var score = [];
 				var s = 0;
