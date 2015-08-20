@@ -12,21 +12,152 @@
                 width: 500px;
             }
         </style>
+        <link rel="stylesheet" href="css/bootstrap.min.css">
         <script src="js/jquery-2.1.4.min.js"></script>
         <script src="js/watch.js"></script>
         <script src="js/popup.js"></script>
+        <script src="js/bootstrap/bootstrap.min.js"></script>
     </head>
     <body>
-        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/constructors/"><c class="checkbox_text">C++ Constructor</c><br><br>
-		<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/stack/"><c class="checkbox_text">Stack</c><br><br>
-		<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/linked-list/"><c class="checkbox_text">Linked list</c><br><br>
-		<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/queue/"><c class="checkbox_text">Queue</c><br><br>
-		<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/binary-trees/"><c class="checkbox_text">Binary Tree</c><br><br>
-		<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/binary-search-trees/"><c class="checkbox_text">BST</c><br><br>
-		<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/graph/"><c class="checkbox_text">Graph</c><br><br>
-		<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/array/"><c class="checkbox_text">Array</c><br><br>
-		<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/string/"><c class="checkbox_text">String</c><br><br>
-		<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/pointers/"><c class="checkbox_text">Pointers</c><br><br>
+        <img src="images/geeksforgeeks-logo.png"><hr>
+        <div class="panel-group" id="accordion">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                            Algo
+                        </a><i class="indicator glyphicon glyphicon-chevron-down  pull-right"></i>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/analysis-of-algorithms/"><c class="checkbox_text"> Analysis of Algorithms</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/searching-and-sorting/"><c class="checkbox_text"> Sorting</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/divide-and-conquer/"><c class="checkbox_text"> Divide and Conquer</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/greedy-algorithms/"><c class="checkbox_text"> Greedy Algorithms</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/dynamic-programming/"><c class="checkbox_text"> Dynamic Programming</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/backtracking/"><c class="checkbox_text"> Backtracking</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/misc-2/"><c class="checkbox_text"> Misc</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/np-complete/"><c class="checkbox_text"> NP Complete</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/searching/"><c class="checkbox_text"> Searching</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/backtrackinganalysis-of-algorithms-recurrences/"><c class="checkbox_text"> Analysis of Algorithms (Recurrences)</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/recursion/"><c class="checkbox_text"> Recursion</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/bit-algorithms/"><c class="checkbox_text"> Bit Algorithms</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/graph-traversals/"><c class="checkbox_text"> Graph Traversals</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/graph-shortest-paths/"><c class="checkbox_text"> Graph Shortest Paths</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/graph-minimum-spanning-tree/"><c class="checkbox_text"> Graph Minimum Spanning Tree</c><br>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                            DS
+                        </a><i class="indicator glyphicon glyphicon-chevron-up  pull-right"></i>
+                    </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/linked-list/"><c class="checkbox_text"> Linked List</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/stack/"><c class="checkbox_text"> Stack</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/queue/"><c class="checkbox_text"> Queue</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/binary-trees/"><c class="checkbox_text"> Binary Trees</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/tree-traversals/"><c class="checkbox_text"> Tree Traversals</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/binary-search-trees/"><c class="checkbox_text"> Binary Search Trees</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/balanced-binary-search-trees/"><c class="checkbox_text"> Balanced Binary Search Trees</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/graph/"><c class="checkbox_text"> Graph</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/hash/"><c class="checkbox_text"> Hash</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/array/"><c class="checkbox_text"> Array</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/misc-3/"><c class="checkbox_text"> Misc</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/b-and-b-trees/"><c class="checkbox_text"> B and B+ Trees</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/heap/"><c class="checkbox_text"> Heap</c><br>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                        C
+                        </a><i class="indicator glyphicon glyphicon-chevron-up pull-right"></i>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/input-and-output/"><c class="checkbox_text"> Input and Output</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/operators/"><c class="checkbox_text"> Operators</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/loops-control-structure/"><c class="checkbox_text"> Loops & Control Structure</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/structure-union/"><c class="checkbox_text"> Structure & Union</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/macro-preprocessor/"><c class="checkbox_text"> Macro & Preprocessor</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/arrays-pointers/"><c class="checkbox_text"> Arrays</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/pointers/"><c class="checkbox_text"> Pointer Basics</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/string/"><c class="checkbox_text"> String</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/functions/"><c class="checkbox_text"> Functions</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/storage-classes/"><c class="checkbox_text"> Storage Classes and Type Qualifiers</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/data-types/"><c class="checkbox_text"> Data Types</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/dynamic-memory-allocation/"><c class="checkbox_text"> Dynamic Memory Allocation</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/misc/"><c class="checkbox_text"> Misc</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/advanced-pointer-c/"><c class="checkbox_text"> Advanced Pointer</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/variable-declaration-and-scope/"><c class="checkbox_text"> Variable Declaration and Scope</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/file-handling/"><c class="checkbox_text"> File Handling</c><br>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                        C++
+                        </a><i class="indicator glyphicon glyphicon-chevron-up pull-right"></i>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/constructors/"><c class="checkbox_text"> Constructors</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/references/"><c class="checkbox_text"> References</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/class-and-object/"><c class="checkbox_text"> Class and Object</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/misc-c/"><c class="checkbox_text"> Misc C++</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/destructors/"><c class="checkbox_text"> Destructors</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/operator-overloading/"><c class="checkbox_text"> Operator Overloading</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/this-pointer/"><c class="checkbox_text"> this pointer</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/function-overloading-2/"><c class="checkbox_text"> Function Overloading and Default Arguments</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/static-keyword/"><c class="checkbox_text"> Static Keyword</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/friend-function-and-class/"><c class="checkbox_text"> friend keyword</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/inheritance/"><c class="checkbox_text"> Inheritance</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/const-keyword/"><c class="checkbox_text"> const keyword</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/new-and-delete/"><c class="checkbox_text"> new and delete</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/virtual-functions/"><c class="checkbox_text"> Virtual Functions</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/templates/"><c class="checkbox_text"> Templates</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/exception-handling/"><c class="checkbox_text"> Exception Handling</c><br>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                        JAVA
+                        </a><i class="indicator glyphicon glyphicon-chevron-up pull-right"></i>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/inheritance-2/"><c class="checkbox_text"> Inheritance</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/abstract-class-and-interface-in-java/"><c class="checkbox_text"> Abstract Class and Interface</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/arrays/"><c class="checkbox_text"> Arrays</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/data-types-2/"><c class="checkbox_text"> Data Types</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/constructors-2/"><c class="checkbox_text"> Constructors</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/exception-handling-2/"><c class="checkbox_text"> Exception Handling</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/packages/"><c class="checkbox_text"> Packages</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/class-and-object-2/"><c class="checkbox_text"> Class and Object</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/functions-2/"><c class="checkbox_text"> Functions</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/final-keyword/"><c class="checkbox_text"> final keyword</c><br>
+                        <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/operators/"><c class="checkbox_text"> Operators</c><br>
+                    </div>
+                </div>
+            </div>
+        </div>
         <button type="submit" id="submit">Submit</button>
     </body>
 </html>

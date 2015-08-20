@@ -5,6 +5,8 @@
 				cb(e);
 			});
 		}
+
+        $( "#submit" ).draggable();
 				
         wrapper('#submit', function(e){
             e.preventDefault();

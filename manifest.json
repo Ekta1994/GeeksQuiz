@@ -12,5 +12,6 @@
     	"default_icon": "images/logo.png",
 	    "default_popup": "popup.html",
 	    "default_title": "GeeksQuiz"
-  	}
+  	},
+  	"content_security_policy": "script-src 'self' https://code.jquery.com; object-src 'self'"
 }
