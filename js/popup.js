@@ -2,7 +2,7 @@
     $(document).ready(function(){
 		function wrapper(id, cb) {
 			$(id).click(function(e){
-				cb(e);
+				cb(e, this);
 			});
 		}
 				
@@ -94,6 +94,10 @@
                 result  = result +'<div class="btn-group btn-group-justified" role="group"><div class="btn-group" role="group"><button class="btn btn-success" type="submit" id="submitanswers">Submit</button></div></div>';
                 $('body').html(result);
                 $("body").animate({ scrollTop: 0 });
+
+                wrapper('d', function(e, that) {
+                    $(that).prev().prop("checked", true);
+                });
 				
 				var score = [];
 				var s = 0;
