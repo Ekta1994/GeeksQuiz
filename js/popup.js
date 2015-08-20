@@ -85,65 +85,35 @@
                     //console.log(questions[array[i]].question);
                     result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
                     for(var j =0; j< questions[array[i]].options.length ; j++){
-                        result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + questions[array[i]].options[j] + '<br>';
+                        result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d>' + questions[array[i]].options[j] + '</d><br>';
                     }
-                    result = result + '<br>';
+                    result = result + '<br></li>';
                 }
 				
-				result = result + "<p> Do you want to submit : </p>";
-				result  = result +'<button type = "Submit" name = "Submit" id = "submitanswers">Submit</button>';
-				
-				result = result + '</div></ul>';
+				result = result + '</ul><div>';
+                result  = result +'<div class="btn-group btn-group-justified" role="group"><div class="btn-group" role="group"><button class="btn btn-success" type="submit" id="submitanswers">Submit</button></div></div>';
                 $('body').html(result);
-                $('body').scrollTop(0);
+                $("body").animate({ scrollTop: 0 });
 				
 				var score = [];
 				var s = 0;
-				var marks = "";
-				
+
 				wrapper('#submitanswers', function(e) {
 					for(i = 0; i< size ; i++){
 						var ansSelected = $('input[name=' + i + ']:checked').attr('value');
-						score.push(ansSelected);
-						marks = marks + (i+1) + '. ' + questions[array[i]].question +'<br>';
-						
-						if ( ansSelected == questions[array[i]].answer){
-							s++;
-							//$('input[name=' + i + ']:checked').attr('value').css('color', '#ff0000');
-							
-							for( var j = 0; j < questions[array[i]].options.length ; j++)
-							{
-								if ((j+1) == questions[array[i]].answer){
-									marks = marks + '<b><font color = "green" >&#10004' + '. ' + questions[array[i]].options[j] + '</font></b><br>';
-								}
-								else{
-									marks = marks + (j+1) + '. ' + questions[array[i]].options[j] + '<br>';
-								}
-							}
-							//marks = marks +  "Correct answer";
-							
-						}
-						else{
-							
-							for( var j = 0; j < questions[array[i]].options.length ; j++)
-							{
-								if ((j+1) == questions[array[i]].answer){
-									marks = marks + '<b><font color = "green" >&#10004' + '. ' + questions[array[i]].options[j] + '</font></b><br>';
-								}
-								else if ( (j+1) == ansSelected){
-									marks = marks + '<b><font color = "red" >&#x2717' + '. ' + questions[array[i]].options[j] + '</font></b><br>';
-								}
-								else{
-									marks = marks + (j+1) + '. ' + questions[array[i]].options[j] + '<br>';
-								}
-							}
-							
-							//marks = marks + "Incorrect answer, the correct answer is " + questions[array[i]].answer;
-						}
-						marks = marks + '<br><br>';
+						$.each($('input[name=' + i + ']'), function (key, val) {
+                            val = $(val).next();
+                            val.text((key+1) + '. ' + val.text())
+                            val.css('font-weight', 'bold');
+                            if(key+1 == questions[array[i]].options.length) {
+                                val.html(val.text() + '<br><br>' + '<font color="green"><b>Solution is option: ' + questions[array[i]].answer + '</b></font>');
+                            }
+                        });
+
+                        $('input[name=' + i + ']').remove();
 					}
-					marks = marks + "<b>Your score is : " + s + '</b>';
-					$('body').html(marks);
+                    $('ul').after('<font color="red"><b>Your Score is: ' + s + '</b></font><br>');
+                    $("body").animate({ scrollTop: $(document).height()-$(window).height() });
 				});
             };
         });
