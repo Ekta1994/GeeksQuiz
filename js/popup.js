@@ -106,13 +106,20 @@
                             val.text((key+1) + '. ' + val.text())
                             val.css('font-weight', 'bold');
                             if(key+1 == questions[array[i]].options.length) {
-                                val.html(val.text() + '<br><br>' + '<font color="green"><b>Solution is option: ' + questions[array[i]].answer + '</b></font>');
+                                val.html(val.html() + '<br><br>' + '<font color="green"><b>Solution is option: ' + questions[array[i]].answer + '</b></font>');
+                                if(ansSelected != questions[array[i]].answer && ansSelected != undefined) {
+                                    val.html(val.html() + '<br>' + '<font color="red"><b>Incorrect, Option Selected is: ' + ansSelected + '</b></font>'); 
+                                }
+                                if(ansSelected == questions[array[i]].answer) {
+                                    ++s;
+                                    val.html(val.html() + '<br>' + '<font color="green"><b>Correct</b></font>');
+                                }
                             }
                         });
 
                         $('input[name=' + i + ']').remove();
 					}
-                    $('ul').after('<font color="red"><b>Your Score is: ' + s + '</b></font><br>');
+                    $('ul').after('<font color="brown"><b>Your Score is: ' + s + '</b></font><br>');
                     $("body").animate({ scrollTop: $(document).height()-$(window).height() });
 				});
             };
