@@ -112,7 +112,7 @@
                             if(key+1 == questions[array[i]].options.length) {
                                 val.html(val.html() + '<br><br>' + '<font color="green"><b>Solution is option: ' + questions[array[i]].answer + '</b></font>');
                                 if(ansSelected != questions[array[i]].answer && ansSelected != undefined) {
-                                    val.html(val.html() + '<br>' + '<font color="red"><b>Incorrect, Option Selected is: ' + ansSelected + '</b></font>'); 
+                                    val.html(val.html() + '<br>' + '<font color="red"><b>Incorrect, Option Selected: ' + ansSelected + '</b></font>');
                                 }
                                 if(ansSelected == questions[array[i]].answer) {
                                     ++s;
