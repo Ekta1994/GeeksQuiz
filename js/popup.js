@@ -167,8 +167,19 @@
             }
                 
             result = result + '</ul><div>';
-            result  = result +'<div class="btn-group btn-group-justified" role="group"><div class="btn-group" role="group"><button class="btn btn-success" type="submit" id="submitanswers">Submit</button></div><div class="btn-group" role="group"><button class="btn btn-warning" type="submit" id="reset">Reset</button></div></div><br>';
-            $('body').html(result);
+			/*
+            result  = result +'<div class="btn-group btn-group-justified" role="group"><div class="btn-group" role="group"><button class="btn btn-success" type="submit" id="submitanswers">Submit</button></div>';
+			result = result + '<div class="btn-group" role="group"><button class="btn btn-warning" type="submit" id="reset1">Reset the same quiz</button></div></div><br>'; 
+			result = result + '<div class="btn-group" role="group"><button class="btn btn-warning" type="submit" id="reset">Select different Topics or exit</button></div></div><br>'; 
+			*/
+			
+			result  = result +'<p> Press this Submit button for evaluation</p>' + ' <div class="btn-group" role="group"><button class="btn btn-success" type="submit" id="submitanswers">Submit</button></div>';
+			result = result + '<P> For attempting the same quiz again </p>' + '<div class="btn-group" role="group"><button class="btn btn-warning" type="submit" id="reset1">Reset the same quiz</button></div></div>'; 
+			result = result + '<p>Please press this button if you are finished with this quiz</p><div class="btn-group" role="group"><button class="btn btn-warning" type="submit" id="reset">Select different Topics or exit</button></div><br>'; 
+			
+			//result = result + '<br><p> If you have finished the quiz remember pressing the reset button before exiting</p>';
+			
+			$('body').html(result);
             $("body").animate({ scrollTop: 0 });
 
             var changeOptions =  function(e, that) {
@@ -192,6 +203,10 @@
             wrapper('#reset', "click", function(e) {
                 chrome.storage.local.clear();
                 location.reload();
+            });
+			
+			wrapper('#reset1', "click", function(e) {
+                allContentLoaded(questions)
             });
 
             wrapper('#submitanswers', "click", function(e) {
