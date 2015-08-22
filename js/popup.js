@@ -123,6 +123,7 @@
                 
             result = result + '</ul><div>';
             result  = result +'<div class="btn-group btn-group-justified" role="group"><div class="btn-group" role="group"><button class="btn btn-success" type="submit" id="submitanswers">Submit</button></div></div>';
+            result  = result +'<div class="btn-group btn-group-justified" role="group"><div class="btn-group" role="group"><button class="btn btn-warning" type="submit" id="reset">Reset</button></div></div>';
             $('body').html(result);
             $("body").animate({ scrollTop: 0 });
 
@@ -143,6 +144,11 @@
             });
 
             wrapper('input:radio', "change", changeOptions);
+
+            wrapper('#reset', "click", function(e) {
+                chrome.storage.local.clear();
+                location.reload();
+            });
 
             wrapper('#submitanswers', "click", function(e) {
                 var score = [];
