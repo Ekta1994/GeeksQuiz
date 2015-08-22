@@ -146,22 +146,22 @@
 						if(n<size)
 							array[n] = stream[j];
 					}
-					console.log(array);
+					//console.log(array);
 					
 					if(loading == undefined) {
 						chrome.storage.local.set({'localData': {'questions': questions, 'array':array}});
 					}
 					var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';
             
-				for(i=0;i<size;i++){
-					result = result + '<li>';
-					//console.log(questions[array[i]].question);
-					result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
-					for(var j =0; j< questions[array[i]].options.length ; j++){
-						result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d>' + questions[array[i]].options[j] + '</d><br>';
-					}
+					for(i=0;i<size;i++){
+						result = result + '<li>';
+						//console.log(questions[array[i]].question);
+						result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
+						for(var j =0; j< questions[array[i]].options.length ; j++){
+							result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d>' + questions[array[i]].options[j] + '</d><br>';
+						}
 					result = result + '<br></li>';
-				}
+					}
                 
 				}
             }
