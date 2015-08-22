@@ -91,34 +91,79 @@
                     size = questions.length;
                 // quiz will have 20 questions at max
                 for(i=0;i<size;i++)
-                array[i] = i;
+					array[i] = i;
                 // randomizing this array
-                var counter = array.length, temp, index;
-                // While there are elements in the array
-                while (counter > 0) {
-                    // Pick a random index
-                    index = Math.floor(Math.random() * counter);
-                    // Decrease counter by 1
-                    counter--;
-                    // And swap the last element with it
-                    temp = array[counter];
-                    array[counter] = array[index];
-                    array[index] = temp;
-                }
-            }
-            if(loading == undefined) {
-                chrome.storage.local.set({'localData': {'questions': questions, 'array':array}});
-            }
-            var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';
+				
+				if(questions.length < 20){
+					var counter = array.length, temp, index;
+					// While there are elements in the array
+					while (counter > 0) {
+						// Pick a random index
+						index = Math.floor(Math.random() * counter);
+						// Decrease counter by 1
+						counter--;
+						// And swap the last element with it
+						temp = array[counter];
+						array[counter] = array[index];
+						array[index] = temp;
+					}
+					
+				if(loading == undefined) {
+					chrome.storage.local.set({'localData': {'questions': questions, 'array':array}});
+				}
+				var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';
             
-            for(i=0;i<size;i++){
-                result = result + '<li>';
-                //console.log(questions[array[i]].question);
-                result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
-                for(var j =0; j< questions[array[i]].options.length ; j++){
-                    result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d>' + questions[array[i]].options[j] + '</d><br>';
-                }
-                result = result + '<br></li>';
+				for(i=0;i<size;i++){
+					result = result + '<li>';
+					//console.log(questions[array[i]].question);
+					result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
+					for(var j =0; j< questions[array[i]].options.length ; j++){
+						result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d>' + questions[array[i]].options[j] + '</d><br>';
+					}
+					result = result + '<br></li>';
+				}
+                
+				
+				}
+				else{
+					var m = questions.length;
+					var stream=[];
+					for(var i=0;i<m;i++)
+						stream[i] = i+1;
+				
+					for(i=0;i<size;i++)
+						array[i] = stream[i];
+					
+					min = 10;
+					max = 100000;
+					
+					for(var j=size; j<m ;j++){
+						
+						var n = Math.floor(Math.random() * (max - min + 1)) + min;
+						n = parseInt(n);
+						n = n%(j+1);
+						
+						if(n<size)
+							array[n] = stream[j];
+					}
+					console.log(array);
+					
+					if(loading == undefined) {
+						chrome.storage.local.set({'localData': {'questions': questions, 'array':array}});
+					}
+					var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';
+            
+				for(i=0;i<size;i++){
+					result = result + '<li>';
+					//console.log(questions[array[i]].question);
+					result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
+					for(var j =0; j< questions[array[i]].options.length ; j++){
+						result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d>' + questions[array[i]].options[j] + '</d><br>';
+					}
+					result = result + '<br></li>';
+				}
+                
+				}
             }
                 
             result = result + '</ul><div>';
