@@ -122,8 +122,7 @@
             }
                 
             result = result + '</ul><div>';
-            result  = result +'<div class="btn-group btn-group-justified" role="group"><div class="btn-group" role="group"><button class="btn btn-success" type="submit" id="submitanswers">Submit</button></div></div>';
-            result  = result +'<div class="btn-group btn-group-justified" role="group"><div class="btn-group" role="group"><button class="btn btn-warning" type="submit" id="reset">Reset</button></div></div>';
+            result  = result +'<div class="btn-group btn-group-justified" role="group"><div class="btn-group" role="group"><button class="btn btn-success" type="submit" id="submitanswers">Submit</button></div><div class="btn-group" role="group"><button class="btn btn-warning" type="submit" id="reset">Reset</button></div></div><br>';
             $('body').html(result);
             $("body").animate({ scrollTop: 0 });
 
