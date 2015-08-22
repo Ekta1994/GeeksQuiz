@@ -43,8 +43,8 @@
                     allContentLoaded(questions);
                 }
             });
-			
-            $('.checkboxCategory:checked').each(function() {
+			var checkboxCategory =  $('.checkboxCategory:checked');
+            checkboxCategory.each(function() {
                 var that = this;
                 var dataUrl = $(this).attr('data-url');
                 dataUrls.push(dataUrl);
@@ -76,6 +76,7 @@
                     ++contentLeftToLoad.loaded;
                 });
             });
+            $('body').html("<img src='images/loading.gif'>");
         });
 
         var allContentLoaded = function(questions, arrayStored, loading) {
