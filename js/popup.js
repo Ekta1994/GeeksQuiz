@@ -1,12 +1,27 @@
 (function() {
     $(document).ready(function(){
+        chrome.storage.sync.get('dataUrls', function (obj) {
+            if(obj['dataUrls'] != undefined) {
+                var dataUrls = obj['dataUrls'];
+                var checkboxs = $('.checkboxCategory');
+                $.each(checkboxs, function(key, val){
+                    val = $(val);
+                    if(dataUrls.indexOf(val.attr('data-url')) != -1) {
+                        val.prop('checked', true);
+                    }
+                });
+                $('#submit').trigger('click');
+            }
+        });
 		function wrapper(id, cb) {
 			$(id).click(function(e){
 				cb(e, this);
 			});
 		}
+
+        var dataUrls = [];
 				
-        wrapper('#submit', function(e){
+        wrapper('#submit', function(e) {
             e.preventDefault();
             var questions = [];
             var contentLeftToLoad = {
@@ -14,9 +29,11 @@
                 'loaded': 0
             };
 			
-            $('.checkboxCategory:checked').each(function(){
+            $('.checkboxCategory:checked').each(function() {
                 var that = this;
-                ajax($(this).attr('data-url'), 'get').done(function(data){
+                var dataUrl = $(this).attr('data-url');
+                dataUrls.push(dataUrl);
+                ajax(dataUrl, 'get').done(function(data){
                     var elements = $(data);
                     var found = elements.find('.mtq_question.mtq_scroll_item-1');
                     $.each(found, function(key, val){
@@ -52,6 +69,7 @@
             });
 
             var allContentLoaded = function() {
+                chrome.storage.sync.set({'dataUrls': dataUrls});
                 array = [];
                 var size = 20;
                 if ( questions.length < size)
@@ -103,6 +121,7 @@
 				var s = 0;
 
 				wrapper('#submitanswers', function(e) {
+                    chrome.storage.sync.remove('dataUrls');
 					for(i = 0; i< size ; i++){
 						var ansSelected = $('input[name=' + i + ']:checked').attr('value');
 						$.each($('input[name=' + i + ']'), function (key, val) {
