@@ -202,32 +202,37 @@
                 allContentLoaded(questions, array);
             });
 
-            wrapper('#submitanswers', "click", function(e) {
-                var score = [];
-                var s = 0;
-                chrome.storage.local.clear();
-                for(i = 0; i< size ; i++){
-                    var ansSelected = $('input[name=' + i + ']:checked').attr('value');
-                    $.each($('input[name=' + i + ']'), function (key, val) {
-                        val = $(val).next();
-                        val.text((key+1) + '. ' + val.text())
-                        val.css('font-weight', 'bold');
-                        if(key+1 == questions[array[i]].options.length) {
-                            val.html(val.html() + '<br><br>' + '<font color="green"><b>Solution is option: ' + questions[array[i]].answer + '</b></font>');
-                            if(ansSelected != questions[array[i]].answer && ansSelected != undefined) {
-                                val.html(val.html() + '<br>' + '<font color="red"><b>Incorrect, Option Selected: ' + ansSelected + '</b></font>');
-                            }
-                            if(ansSelected == questions[array[i]].answer) {
-                                ++s;
-                                val.html(val.html() + '<br>' + '<font color="green"><b>Correct</b></font>');
-                            }
-                        }
-                    });
+            var submited = false;
 
-                    $('input[name=' + i + ']').remove();
+            wrapper('#submitanswers', "click", function(e) {
+                if(!submited) {
+                    var score = [];
+                    var s = 0;
+                    chrome.storage.local.clear();
+                    for(i = 0; i< size ; i++){
+                        var ansSelected = $('input[name=' + i + ']:checked').attr('value');
+                        $.each($('input[name=' + i + ']'), function (key, val) {
+                            val = $(val).next();
+                            val.text((key+1) + '. ' + val.text())
+                            val.css('font-weight', 'bold');
+                            if(key+1 == questions[array[i]].options.length) {
+                                val.html(val.html() + '<br><br>' + '<font color="green"><b>Solution is option: ' + questions[array[i]].answer + '</b></font>');
+                                if(ansSelected != questions[array[i]].answer && ansSelected != undefined) {
+                                    val.html(val.html() + '<br>' + '<font color="red"><b>Incorrect, Option Selected: ' + ansSelected + '</b></font>');
+                                }
+                                if(ansSelected == questions[array[i]].answer) {
+                                    ++s;
+                                    val.html(val.html() + '<br>' + '<font color="green"><b>Correct</b></font>');
+                                }
+                            }
+                        });
+    
+                        $('input[name=' + i + ']').remove();
+                    }
+                    $('ul').after('<font color="brown"><b>Your Score is: ' + s + '</b></font><br>');
+                    $("body").animate({ scrollTop: $(document).height()-$(window).height() });
+                    submited = true;
                 }
-                $('ul').after('<font color="brown"><b>Your Score is: ' + s + '</b></font><br>');
-                $("body").animate({ scrollTop: $(document).height()-$(window).height() });
             });
         };
 		
