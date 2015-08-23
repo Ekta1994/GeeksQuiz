@@ -158,9 +158,9 @@
                 
             result = result + '</ul><div>';
 			
-			result  = result +'<br><i><b>Press this Submit button for evaluation : </b></i>'  + '<button type = "submit" id = "submitanswers">Submit</button> <br> ';
-			result = result + '<br><i><b> For attempting the same quiz again : </b></i>' + '<button type="submit" id="reset1">Reset</button><br>'; 
-			result = result + '<br><i><b>Please press this button if you are finished with this quiz : </b></i>' + '<button type="submit" id="reset">Exit</button><br>'; 
+			result  = result +'<br><i><b>Press this Submit button for evaluation : </b></i>'  + '<button class="btn btn-success btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "submitanswers">Submit</button> <br> ';
+			result = result + '<br><i><b> For attempting the same quiz again : </b></i>' + '<button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset1">Reset</button><br>'; 
+			result = result + '<br><i><b>Please press this button if you are finished with this quiz : </b></i>' + '<button class="btn btn-danger btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Exit</button><br>'; 
 						
 			$('body').html(result);
             $("body").animate({ scrollTop: 0 });
