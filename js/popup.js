@@ -161,7 +161,9 @@
 			result  = result  + '<button class="btn btn-success btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "submitanswers">Submit</button>       ';
 			result = result  + '<button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset1">Reset</button>         '; 
 			result = result + '<button class="btn btn-danger btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Exit</button>         '; 
-						
+					
+			result = result + '<br><br>';
+				
 			$('body').html(result);
             $("body").animate({ scrollTop: 0 });
 
