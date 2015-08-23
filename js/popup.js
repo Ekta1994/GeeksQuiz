@@ -84,7 +84,7 @@
             var size = 20;
             if(arrayStored != undefined) {
                 array = arrayStored;
-                size = array.length;
+                size = array.length;	
             } else {
                 if ( questions.length < size)
                     size = questions.length;
@@ -128,6 +128,16 @@
 						if(n<size)
 							array[n] = stream[j];
 					}
+					
+					var low = 0, high = 9;
+					while (low<9){
+						var temp = array[low];
+						array[low] = array[high];
+						array[high] = temp;
+						low++;
+						high++;
+					}
+					//console.log(array);
 				}
             }
 
@@ -147,11 +157,6 @@
             }
                 
             result = result + '</ul><div>';
-			/*
-            result  = result +'<div class="btn-group btn-group-justified" role="group"><div class="btn-group" role="group"><button class="btn btn-success" type="submit" id="submitanswers">Submit</button></div>';
-			result = result + '<div class="btn-group" role="group"><button class="btn btn-warning" type="submit" id="reset1">Reset the same quiz</button></div></div><br>'; 
-			result = result + '<div class="btn-group" role="group"><button class="btn btn-warning" type="submit" id="reset">Select different Topics or exit</button></div></div><br>'; 
-			*/
 			
 			result  = result +'<br><i><b>Press this Submit button for evaluation : </b></i>'  + '<button type = "submit" id = "submitanswers">Submit</button> <br> ';
 			result = result + '<br><i><b> For attempting the same quiz again : </b></i>' + '<button type="submit" id="reset1">Reset</button><br>'; 
