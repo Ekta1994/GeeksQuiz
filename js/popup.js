@@ -240,7 +240,7 @@
     
                         $('input[name=' + i + ']').remove();
                     }
-                    $('ul').after('<font color="brown"><b>Your Score is: ' + s + '</b></font><br>');
+                    $('ul').after('<font color="brown"><b><center>Your Score is: ' + s + '/' + size + '</center></b></font><br>');
                     // $("body").animate({ scrollTop: $(document).height()-$(window).height() });
                     submited = true;
                     wrapper('.discuss', 'click', function(e, that) {
