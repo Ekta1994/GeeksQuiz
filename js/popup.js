@@ -157,11 +157,19 @@
             }
                 
             result = result + '</ul><div>';
-			
-			result  = result  + '<button class="btn btn-success btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "submitanswers">Submit</button>       ';
-			result = result  + '<button class="btn btn-warning btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset1">Reset</button>         '; 
-			result = result + '<button class="btn btn-danger btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Exit</button>         '; 
-					
+			 
+            result = result + '\
+                <div class="btn-group btn-group-justified" role="group">\
+                    <div class="btn-group" role="group" style="padding: 5px;">\
+                        <button class="btn btn-success" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "submitanswers">Submit Quiz</button>\
+                    </div>\
+                    <div class="btn-group" role="group" style="padding: 5px;">\
+                        <button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset1">Reset Selections</button>\
+                    </div>\
+                    <div class="btn-group" role="group" style="padding: 5px;">\
+                        <button class="btn btn-danger" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Exit Quiz</button>\
+                    </div>\
+                </div>';
 			result = result + '<br><br>';
 				
 			$('body').html(result);
@@ -193,46 +201,6 @@
 			wrapper('#reset1', "click", function(e) {
                 allContentLoaded(questions, array);
             });
-			
-			
-			$('#submitanswers').on('mouseover',function(){
-				$(this).css('height', '50px');
-				$(this).css('width' , '190px');
-				$(this).text("Click this button for evaluation");
-			});
-			
-			
-			$('#submitanswers').on('mouseout',function(){
-				$(this).css('height', '30px');
-				$(this).css('width' , '70px');
-				$(this).text("Submit");
-			});
-			
-			$('#reset1').on('mouseover',function(){
-				$(this).css('height', '50px');
-				$(this).css('width' , '190px');
-				$(this).text("Attempt the same quiz again");
-			});
-			
-			
-			$('#reset1').on('mouseout',function(){
-				$(this).css('height', '30px');
-				$(this).css('width' , '70px');
-				$(this).text("Reset");
-			});
-			
-			$('#reset').on('mouseover',function(){
-				$(this).css('height', '50px');
-				$(this).css('width' , '190px');
-				$(this).text("Finished or Want to select topics again");
-			});
-			
-			
-			$('#reset').on('mouseout',function(){
-				$(this).css('height', '30px');
-				$(this).css('width' , '70px');
-				$(this).text("Exit");
-			});
 
             wrapper('#submitanswers', "click", function(e) {
                 var score = [];
