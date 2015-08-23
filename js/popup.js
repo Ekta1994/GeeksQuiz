@@ -5,20 +5,28 @@
                 var questions =  obj['localData']['questions'];
                 var array = obj['localData']['array']
                 allContentLoaded(questions, array, true);
-            }
-            chrome.storage.local.get('selectedOptions', function(obj) {            
-                var selectedOptions = obj['selectedOptions'];
-                for(var key in  selectedOptions) {
-                    var question = selectedOptions[key]['question'];
-                    var ele = $('input[name="' + question + '"]');
-                    $.each(ele, function(k, val) {
-                        val = $(val);
-                        if(val.attr('value') == selectedOptions[key]['optionChoosed']) {
-                            val.prop('checked', true)
+                chrome.storage.local.get('selectedOptions', function(obj) {
+                    var selectedOptions = obj['selectedOptions'];
+                    for(var key in  selectedOptions) {
+                        var question = selectedOptions[key]['question'];
+                        var ele = $('input[name="' + question + '"]');
+                        $.each(ele, function(k, val) {
+                            val = $(val);
+                            if(val.attr('value') == selectedOptions[key]['optionChoosed']) {
+                                val.prop('checked', true)
+                            }
+                        });
+                    }
+                    chrome.storage.local.get('quizSubmited', function(obj) {
+                        if(obj.hasOwnProperty('quizSubmited')) {
+                            var quizSubmited =  obj['quizSubmited'];
+                            if(quizSubmited) {
+                                $('#submitanswers').trigger('click');
+                            }
                         }
                     });
-                }
-            });
+                });
+            }
         });
 
 		function wrapper(id, e, cb) {
@@ -56,8 +64,9 @@
                         var question = val.children('.mtq_question_text').html();
                         var optionsHtml = val.find('.mtq_answer_text');
 						var ans = val.find('.mtq_marker.mtq_correct_marker');
-						var regexp = /mtq_marker-\d+-(\d+)-\d+/g
-						ans = $(ans).attr('id')
+						var regexp = /mtq_marker-\d+-(\d+)-\d+/g;
+						ans = $(ans).attr('id');
+                        var discuss = val.find('.mtq_answer_table').next().next().children('a').attr('href');
 						var match = regexp.exec(ans);
 						//console.log(match);
 						ans = match[1];
@@ -70,7 +79,8 @@
                         questions.push({
                             'question': question,
                             'options': options,
-							'answer': ans
+							'answer': ans,
+                            'discuss': discuss
                         });
                     });
                     ++contentLeftToLoad.loaded;
@@ -145,7 +155,7 @@
                 chrome.storage.local.set({'localData': {'questions': questions, 'array':array}});
             }
 
-            var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';            
+            var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';
             for(i=0;i<size;i++) {
                 result = result + '<li>';
                 //console.log(questions[array[i]].question);
@@ -173,7 +183,7 @@
 			result = result + '<br><br>';
 				
 			$('body').html(result);
-            $("body").animate({ scrollTop: 0 });
+            // $("body").animate({ scrollTop: 0 });
 
             var changeOptions =  function(e, that) {
                 var selectedOptions = []
@@ -208,7 +218,7 @@
                 if(!submited) {
                     var score = [];
                     var s = 0;
-                    chrome.storage.local.clear();
+                    chrome.storage.local.set({'quizSubmited': true});
                     for(i = 0; i< size ; i++){
                         var ansSelected = $('input[name=' + i + ']:checked').attr('value');
                         $.each($('input[name=' + i + ']'), function (key, val) {
@@ -216,7 +226,8 @@
                             val.text((key+1) + '. ' + val.text())
                             val.css('font-weight', 'bold');
                             if(key+1 == questions[array[i]].options.length) {
-                                val.html(val.html() + '<br><br>' + '<font color="green"><b>Solution is option: ' + questions[array[i]].answer + '</b></font>');
+                                val.html(val.html() + '<br><br><a class="discuss" data-url="' + questions[array[i]].discuss + '" >Discuss</a>');
+                                val.html(val.html() + '<br>' + '<font color="green"><b>Solution is option: ' + questions[array[i]].answer + '</b></font>');
                                 if(ansSelected != questions[array[i]].answer && ansSelected != undefined) {
                                     val.html(val.html() + '<br>' + '<font color="red"><b>Incorrect, Option Selected: ' + ansSelected + '</b></font>');
                                 }
@@ -230,8 +241,26 @@
                         $('input[name=' + i + ']').remove();
                     }
                     $('ul').after('<font color="brown"><b>Your Score is: ' + s + '</b></font><br>');
-                    $("body").animate({ scrollTop: $(document).height()-$(window).height() });
+                    // $("body").animate({ scrollTop: $(document).height()-$(window).height() });
                     submited = true;
+                    wrapper('.discuss', 'click', function(e, that) {
+                        ajax(that.attr('data-url'), 'get').done(function(data) {
+                            data = $(data);
+                            data.find('script').each(function() {
+                                $(this).remove();
+                            });
+                            data.find('a').each(function() {
+                                var that = $(this);
+                                if(that.text() == "Quiz of this Question") {
+                                    that.remove();
+                                }
+                            });
+                            $('body').html('<img src="images/geeksforgeeks-logo.png"><hr>' + data.find('.entry-content').html() + '<a class="back">Back to quiz</a>');
+                            wrapper(".back", "click", function() {
+                                location.reload();
+                            });
+                        });
+                    });
                 }
             });
         };
