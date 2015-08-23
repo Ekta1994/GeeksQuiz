@@ -111,7 +111,7 @@
 					var m = questions.length;
 					var stream=[];
 					for(var i=0;i<m;i++)
-						stream[i] = i+1;
+						stream[i] = i;
 				
 					for(i=0;i<size;i++)
 						array[i] = stream[i];
