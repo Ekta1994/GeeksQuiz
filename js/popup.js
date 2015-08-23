@@ -6,20 +6,19 @@
                 var array = obj['localData']['array']
                 allContentLoaded(questions, array, true);
             }
-        });
-
-        chrome.storage.local.get('selectedOptions', function(obj) {            
-            var selectedOptions = obj['selectedOptions'];
-            for(var key in  selectedOptions) {
-                var question = selectedOptions[key]['question'];
-                var ele = $('input[name="' + question + '"]');
-                $.each(ele, function(k, val) {
-                    val = $(val);
-                    if(val.attr('value') == selectedOptions[key]['optionChoosed']) {
-                        val.prop('checked', true)
-                    }
-                });
-            }
+            chrome.storage.local.get('selectedOptions', function(obj) {            
+                var selectedOptions = obj['selectedOptions'];
+                for(var key in  selectedOptions) {
+                    var question = selectedOptions[key]['question'];
+                    var ele = $('input[name="' + question + '"]');
+                    $.each(ele, function(k, val) {
+                        val = $(val);
+                        if(val.attr('value') == selectedOptions[key]['optionChoosed']) {
+                            val.prop('checked', true)
+                        }
+                    });
+                }
+            });
         });
 
 		function wrapper(id, e, cb) {
@@ -33,9 +32,11 @@
         wrapper('#submit', "click", function(e) {
             e.preventDefault();
             var questions = [];
+            var checkboxCategory =  $('.checkboxCategory:checked');
             var contentLeftToLoad = {
-                'totalSize': $('.checkboxCategory:checked').size(),
-                'loaded': 0
+                'totalSize': checkboxCategory.size(),
+                'loaded': 0,
+
             };
 
             watch(contentLeftToLoad, 'loaded', function () {
@@ -43,7 +44,6 @@
                     allContentLoaded(questions);
                 }
             });
-			var checkboxCategory =  $('.checkboxCategory:checked');
             checkboxCategory.each(function() {
                 var that = this;
                 var dataUrl = $(this).attr('data-url');
@@ -80,13 +80,12 @@
         });
 
         var allContentLoaded = function(questions, arrayStored, loading) {
-            array = [];
+            var array = [];
             var size = 20;
             if(arrayStored != undefined) {
                 array = arrayStored;
                 size = array.length;
-            }
-            else {
+            } else {
                 if ( questions.length < size)
                     size = questions.length;
                 // quiz will have 20 questions at max
@@ -94,7 +93,7 @@
 					array[i] = i;
                 // randomizing this array
 				
-				if(questions.length < 20){
+				if(questions.length < 20)   {
 					var counter = array.length, temp, index;
 					// While there are elements in the array
 					while (counter > 0) {
@@ -107,25 +106,8 @@
 						array[counter] = array[index];
 						array[index] = temp;
 					}
-					
-				if(loading == undefined) {
-					chrome.storage.local.set({'localData': {'questions': questions, 'array':array}});
-				}
-				var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';
-            
-				for(i=0;i<size;i++){
-					result = result + '<li>';
-					//console.log(questions[array[i]].question);
-					result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
-					for(var j =0; j< questions[array[i]].options.length ; j++){
-						result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d>' + questions[array[i]].options[j] + '</d><br>';
-					}
-					result = result + '<br></li>';
-				}
-                
-				
-				}
-				else{
+				    
+                } else {
 					var m = questions.length;
 					var stream=[];
 					for(var i=0;i<m;i++)
@@ -146,24 +128,22 @@
 						if(n<size)
 							array[n] = stream[j];
 					}
-					//console.log(array);
-					
-					if(loading == undefined) {
-						chrome.storage.local.set({'localData': {'questions': questions, 'array':array}});
-					}
-					var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';
-            
-					for(i=0;i<size;i++){
-						result = result + '<li>';
-						//console.log(questions[array[i]].question);
-						result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
-						for(var j =0; j< questions[array[i]].options.length ; j++){
-							result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d>' + questions[array[i]].options[j] + '</d><br>';
-						}
-					result = result + '<br></li>';
-					}
-                
 				}
+            }
+
+            if(loading == undefined) {
+                chrome.storage.local.set({'localData': {'questions': questions, 'array':array}});
+            }
+
+            var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';            
+            for(i=0;i<size;i++) {
+                result = result + '<li>';
+                //console.log(questions[array[i]].question);
+                result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
+                for(var j =0; j< questions[array[i]].options.length ; j++){
+                    result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d>' + questions[array[i]].options[j] + '</d><br>';
+                }
+                result = result + '<br></li>';
             }
                 
             result = result + '</ul><div>';
@@ -206,7 +186,7 @@
             });
 			
 			wrapper('#reset1', "click", function(e) {
-                allContentLoaded(questions)
+                allContentLoaded(questions, array);
             });
 
             wrapper('#submitanswers', "click", function(e) {
