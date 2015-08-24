@@ -36,9 +36,12 @@
 		}
 
         var dataUrls = [];
+		
+		var array = [];
 				
         wrapper('#submit', "click", function(e) {
             e.preventDefault();
+			
             var questions = [];
             var checkboxCategory =  $('.checkboxCategory:checked');
             var contentLeftToLoad = {
@@ -52,6 +55,11 @@
                     allContentLoaded(questions);
                 }
             });
+			
+			function timer (){
+				alert('The time of 	quiz is over!!');
+			}
+			
             checkboxCategory.each(function() {
                 var that = this;
                 var dataUrl = $(this).attr('data-url');
@@ -90,7 +98,12 @@
         });
 
         var allContentLoaded = function(questions, arrayStored, loading) {
-            var array = [];
+			
+			var mintaken ,sectaken,iv;
+			var ct = 0;
+			var s = 59;
+			var f  = 0;
+			
             var size = 20;
             if(arrayStored != undefined) {
                 array = arrayStored;
@@ -155,43 +168,100 @@
                 chrome.storage.local.set({'localData': {'questions': questions, 'array':array}});
             }
 			
-            var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';
-            for(i=0;i<size;i++) {
+			var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';
+			var instructions = [];
+			
+			instructions = 'Please read the below instructions carefully : <br><br> <ul> <li> The test will have maximum 20 questions </li> <li> The questions will only be from the category you have selected. </li>';
+			instructions += '<li>A timer will be running displaying the time taken by you at any instant.</li> <li> You will be given 10 minutes at maximum to complete the test. </li> ';
+			instructions += '<li>If you wish to submit before the maximum time limit, click on <b><i> Submit </b></i> button. </li> <br></ul> ';
+			
+			instructions += '<div class="btn-group" role="group" style="padding: 5px;">\
+                        <button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="startquiz">Start the quiz</button>\
+                    </div>';
+					
+			instructions += '<div class="btn-group" role="group" style="padding: 5px;">\
+							<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Select the topics again</button>\
+						</div>'
+			
+			result = result + instructions;
+			
+			$('body').html(result);
+			
+			wrapper('#startquiz', "click", function(e) {
+				
+				var result = '<div class = "i1"><img src="images/geeksforgeeks-logo.png"></div><hr><div><ul>';
+				
+				result = result + '<div id="countdowntimer"><span id="ms_timer"><span></div><br><br>';
+				
+                for(i=0;i<size;i++) {
                 result = result + '<li>';
                 //console.log(questions[array[i]].question);
                 result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
-                for(var j =0; j< questions[array[i]].options.length ; j++){
-                    result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d class = "opt" >'+ questions[array[i]].options[j] + '</d><br>';
-                }
+					for(var j =0; j< questions[array[i]].options.length ; j++){
+						result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d class = "opt" >'+ questions[array[i]].options[j] + '</d><br>';
+					}
                 result = result + '<br></li>';
-            }
+				}
                 
-            result = result + '</ul><div>';
-			 
-            result = result + '\
-                <div class="btn-group btn-group-justified" role="group">\
-                    <div class="btn-group" role="group" style="padding: 5px;">\
-                        <button class="btn btn-success" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "submitanswers">Submit Quiz</button>\
-                    </div>\
-                    <div class="btn-group" role="group" style="padding: 5px;">\
-                        <button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset1">Reset Selections</button>\
-                    </div>\
-                    <div class="btn-group" role="group" style="padding: 5px;">\
-                        <button class="btn btn-danger" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Exit Quiz</button>\
-                    </div>\
-                </div>';
-			result = result + '<br><br>';
+				result = result + '</ul><div>';
+				 
+				result = result + '\
+					<div class="btn-group btn-group-justified" role="group">\
+						<div class="btn-group" role="group" style="padding: 5px;">\
+							<button class="btn btn-success" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "submitanswers">Submit Quiz</button>\
+						</div>\
+						<div class="btn-group" role="group" style="padding: 5px;">\
+							<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset1">Reset Selections</button>\
+						</div>\
+						<div class="btn-group" role="group" style="padding: 5px;">\
+							<button class="btn btn-danger" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Exit Quiz</button>\
+						</div>\
+					</div>';
+				result = result + '<br><br>';
+					
+				$('body').html(result);
+				$("body").animate({ scrollTop: 0 });
+				//$("body").animate({ scrollTop: $(document).height()-$(window).height() });
+			
+				var countDown = function() {
+					var elem = $(this);
+					var display = function() {
+						elem.text( ct + " minutes " + s + " seconds ");
+						
+						mintaken = ct;
+						sectaken = s;
+						
+						if( s == 0){
+							ct--;
+							s = 60;
+						}
+						s--;
+					}
+					
+					iv = setInterval(function() {
+						display();
+						if ( ct == -1 )
+						{
+							alert("You have exceeded the time limit! The quiz without the time limit will be reloaded now.");
+							//allContentLoaded(questions, array);
+							clearInterval(iv);
+						}
+						
+					}, 1000);
+					display();
+				};
+								
+				$("#ms_timer").each(countDown);
 				
-			$('body').html(result);
-            $("body").animate({ scrollTop: 0 });
-			
-			$(".opt").mouseover(function () {
+				$(".opt").mouseover(function () {
 				$(this).css("font-weight", "bold");
-			});
+				});
 			
-			$(".opt").mouseout(function () {
-				$(this).css("font-weight", "normal");
-			});
+				$(".opt").mouseout(function () {
+					$(this).css("font-weight", "normal");
+				});
+				
+            });
 
             var changeOptions =  function(e, that) {
                 var selectedOptions = []
@@ -217,12 +287,15 @@
             });
 			
 			wrapper('#reset1', "click", function(e) {
+				ct = 1;
+				s = 59;
                 allContentLoaded(questions, array);
             });
 
             var submited = false;
 
             wrapper('#submitanswers', "click", function(e) {
+				clearInterval(iv);
                 if(!submited) {
                     var score = [];
                     var s = 0;
@@ -248,8 +321,9 @@
     
                         $('input[name=' + i + ']').remove();
                     }
-                    $('ul').after('<font color="brown"><b><center>Your Score is: ' + s + '/' + size + '</center></b></font><br>');
-                     $("body").animate({ scrollTop: $(document).height()-$(window).height() });
+					
+                    $('ul').after('<font color="brown"><b><center>Total time taken : ' + mintaken + " minutes " + sectaken + " seconds " + '<center>Your Score is: ' + s + '/' + size + '</center></b></font><br>');
+                    $("body").animate({ scrollTop: $(document).height()-$(window).height() });
                     submited = true;
                     wrapper('.discuss', 'click', function(e, that) {
                         ajax(that.attr('data-url'), 'get').done(function(data) {
