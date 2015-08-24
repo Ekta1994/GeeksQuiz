@@ -154,14 +154,14 @@
             if(loading == undefined) {
                 chrome.storage.local.set({'localData': {'questions': questions, 'array':array}});
             }
-
+			
             var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';
             for(i=0;i<size;i++) {
                 result = result + '<li>';
                 //console.log(questions[array[i]].question);
                 result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
                 for(var j =0; j< questions[array[i]].options.length ; j++){
-                    result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d>' + questions[array[i]].options[j] + '</d><br>';
+                    result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d class = "opt" >'+ questions[array[i]].options[j] + '</d><br>';
                 }
                 result = result + '<br></li>';
             }
@@ -183,7 +183,15 @@
 			result = result + '<br><br>';
 				
 			$('body').html(result);
-            // $("body").animate({ scrollTop: 0 });
+            $("body").animate({ scrollTop: 0 });
+			
+			$(".opt").mouseover(function () {
+				$(this).css("font-weight", "bold");
+			});
+			
+			$(".opt").mouseout(function () {
+				$(this).css("font-weight", "normal");
+			});
 
             var changeOptions =  function(e, that) {
                 var selectedOptions = []
@@ -241,7 +249,7 @@
                         $('input[name=' + i + ']').remove();
                     }
                     $('ul').after('<font color="brown"><b><center>Your Score is: ' + s + '/' + size + '</center></b></font><br>');
-                    // $("body").animate({ scrollTop: $(document).height()-$(window).height() });
+                     $("body").animate({ scrollTop: $(document).height()-$(window).height() });
                     submited = true;
                     wrapper('.discuss', 'click', function(e, that) {
                         ajax(that.attr('data-url'), 'get').done(function(data) {
