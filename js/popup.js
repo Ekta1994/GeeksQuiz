@@ -100,7 +100,7 @@
         var allContentLoaded = function(questions, arrayStored, loading) {
 			
 			var mintaken ,sectaken,iv;
-			var ct = 0;
+			var ct = 9;
 			var s = 59;
 			var f  = 0;
 			
@@ -168,11 +168,11 @@
                 chrome.storage.local.set({'localData': {'questions': questions, 'array':array}});
             }
 			
-			var result = '<img src="images/geeksforgeeks-logo.png"><hr><div><ul>';
+			var result = '<img src="images/geeksforgeeks-logo.png">  <hr><div><ul>';
 			var instructions = [];
 			
 			instructions = 'Please read the below instructions carefully : <br><br> <ul> <li> The test will have maximum 20 questions </li> <li> The questions will only be from the category you have selected. </li>';
-			instructions += '<li>A timer will be running displaying the time taken by you at any instant.</li> <li> You will be given 10 minutes at maximum to complete the test. </li> ';
+			instructions += '<li>A timer will be running displaying the time left for you at that instant.</li> <li> You will be given 10 minutes at maximum to complete the test. </li> ';
 			instructions += '<li>If you wish to submit before the maximum time limit, click on <b><i> Submit </b></i> button. </li> <br></ul> ';
 			
 			instructions += '<div class="btn-group" role="group" style="padding: 5px;">\
@@ -189,9 +189,9 @@
 			
 			wrapper('#startquiz', "click", function(e) {
 				
-				var result = '<div class = "i1"><img src="images/geeksforgeeks-logo.png"></div><hr><div><ul>';
+				var result = '<img src="images/geeksforgeeks-logo.png"><hr>';
 				
-				result = result + '<div id="countdowntimer"><span id="ms_timer"><span></div><br><br>';
+				result = result + '<div id="countdowntimer"><span id="ms_timer"><span></div><br><br><div><ul>';
 				
                 for(i=0;i<size;i++) {
                 result = result + '<li>';
@@ -226,8 +226,9 @@
 				var countDown = function() {
 					var elem = $(this);
 					var display = function() {
-						elem.text( ct + " minutes " + s + " seconds ");
-						
+						var b = '<div id = "tb" align = "center" style = "border : 2px solid ; border-radius : 7px; width : 40%; height : 7% ; padding : 2%"> ' + ct + " minutes " + s + " seconds " + ' </div>';
+						//elem.text( ct + " minutes " + s + " seconds ");
+						elem.html(b);
 						mintaken = ct;
 						sectaken = s;
 						
@@ -322,6 +323,8 @@
                         $('input[name=' + i + ']').remove();
                     }
 					
+					mintaken = 9 - mintaken;
+					sectaken = 59 - sectaken;
                     $('ul').after('<font color="brown"><b><center>Total time taken : ' + mintaken + " minutes " + sectaken + " seconds " + '<center>Your Score is: ' + s + '/' + size + '</center></b></font><br>');
                     $("body").animate({ scrollTop: $(document).height()-$(window).height() });
                     submited = true;
