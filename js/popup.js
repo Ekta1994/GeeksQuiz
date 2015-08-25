@@ -191,9 +191,10 @@
 			
 			wrapper('#startquiz', "click", function(e) {
 				
-				var result = '<img src="images/geeksforgeeks-logo.png"><hr>';
+				var r = '<div style = "position: fixed; width : 100% ; height : 125px; padding : 10px; background-color: white;"> <div><img src="images/geeksforgeeks-logo.png"> </div>'
+				r = r + '<div id="countdowntimer"><span id="ms_timer"></span></div></div>'
 				
-				result = result + '<div id="countdowntimer"><span id="ms_timer"><span></div><br><br><div><ul>';
+				var result = '<br><br><br><br><br><br><br><br><div><ul>';
 				
                 for(i=0;i<size;i++) {
                 result = result + '<li>';
@@ -220,8 +221,9 @@
 						</div>\
 					</div>';
 				result = result + '<br><br>';
-					
-				$('body').html(result);
+				
+				r = r + result;
+				$('body').html(r);
 				$("body").animate({ scrollTop: 0 });
 				//$("body").animate({ scrollTop: $(document).height()-$(window).height() });
 			
