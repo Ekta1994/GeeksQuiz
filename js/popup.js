@@ -167,7 +167,7 @@
                 //console.log(questions[array[i]].question);
                 result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
 					for(var j =0; j< questions[array[i]].options.length ; j++){
-						result = result + '<div class = "opt"><input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<span>'+ questions[array[i]].options[j] + '</span></div><br>';
+						result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d class = "opt" >'+ questions[array[i]].options[j] + '</d><br>';
 					}
                 result = result + '<br></li>';
 				}
@@ -224,6 +224,15 @@
 				};
 								
 				$("#ms_timer").each(countDown);
+				
+				$(".opt").mouseover(function () {
+					$(this).css("font-weight", "bold");
+				});
+			
+				$(".opt").mouseout(function () {
+					$(this).css("font-weight", "normal");
+				});
+				
             });
 
             var changeOptions =  function(e, that) {
@@ -237,7 +246,7 @@
                 // chrome.storage.local.set({'selectedOptions': selectedOptions});
             }
 
-            wrapper('.opt', "click", function(e, that) {
+            wrapper('d', "click", function(e, that) {
                 $(that).prev().prop("checked", true);
                 changeOptions(e, $(that).prev());
             });
