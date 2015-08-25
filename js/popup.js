@@ -194,7 +194,9 @@
 				var r = '<div style = "position: fixed; width : 100% ; height : 125px; padding : 10px; background-color: white;"> <div><img src="images/geeksforgeeks-logo.png"> </div>'
 				r = r + '<div id="countdowntimer"><span id="ms_timer"></span></div></div>'
 				
-				var result = '<br><br><br><br><br><br><br><br><div><ul>';
+				//var result = '<br><br><br><br><br><br><br><br><div><ul>';
+				
+				var result = '<div style= "padding-top : 135px"><ul>';
 				
                 for(i=0;i<size;i++) {
                 result = result + '<li>';
