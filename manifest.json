@@ -9,10 +9,5 @@
       		"scripts": ["js/background.js"]
     	}
 	},
-	"permissions": [
-		"http://*/",
-		"https://*/",
-		"storage"
-  	],
 	"icons": { "16": "images/logo.png", "128": "images/logo128.png" }
 }
