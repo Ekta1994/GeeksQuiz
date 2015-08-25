@@ -1,0 +1,694 @@
+diff --git a/js/popup.js b/js/popup.js
+index fa2b379..6d6a8f8 100644
+--- a/js/popup.js
++++ b/js/popup.js
+@@ -1,33 +1,5 @@
+ (function() {
+     $(document).ready(function(){
+-        chrome.storage.local.get('localData', function (obj) {
+-            if(obj.hasOwnProperty('localData')) {
+-                var questions =  obj['localData']['questions'];
+-                var array = obj['localData']['array']
+-                allContentLoaded(questions, array, true);
+-                chrome.storage.local.get('selectedOptions', function(obj) {
+-                    var selectedOptions = obj['selectedOptions'];
+-                    for(var key in  selectedOptions) {
+-                        var question = selectedOptions[key]['question'];
+-                        var ele = $('input[name="' + question + '"]');
+-                        $.each(ele, function(k, val) {
+-                            val = $(val);
+-                            if(val.attr('value') == selectedOptions[key]['optionChoosed']) {
+-                                val.prop('checked', true)
+-                            }
+-                        });
+-                    }
+-                    chrome.storage.local.get('quizSubmited', function(obj) {
+-                        if(obj.hasOwnProperty('quizSubmited')) {
+-                            var quizSubmited =  obj['quizSubmited'];
+-                            if(quizSubmited) {
+-                                $('#submitanswers').trigger('click');
+-                            }
+-                        }
+-                    });
+-                });
+-            }
+-        });
+ 
+ 		function wrapper(id, e, cb) {
+ 			$(document).on(e, id, function(e){
+@@ -38,6 +10,8 @@
+         var dataUrls = [];
+ 		
+ 		var array = [];
++
++		var oldHtml;
+ 				
+         wrapper('#submit', "click", function(e) {
+             e.preventDefault();
+@@ -94,10 +68,11 @@
+                     ++contentLeftToLoad.loaded;
+                 });
+             });
++			oldHtml = $('body').html();
+             $('body').html("<img src='images/loading.gif'>");
+         });
+ 
+-        var allContentLoaded = function(questions, arrayStored, loading) {
++        var allContentLoaded = function(questions) {
+ 			
+ 			var mintaken ,sectaken,iv;
+ 			var ct = 0;
+@@ -105,68 +80,57 @@
+ 			var f  = 0;
+ 			
+             var size = 20;
+-            if(arrayStored != undefined) {
+-                array = arrayStored;
+-                size = array.length;	
+-            } else {
+-                if ( questions.length < size)
+-                    size = questions.length;
+-                // quiz will have 20 questions at max
+-                for(i=0;i<size;i++)
+-					array[i] = i;
+-                // randomizing this array
+-				
+-				if(questions.length < 20)   {
+-					var counter = array.length, temp, index;
+-					// While there are elements in the array
+-					while (counter > 0) {
+-						// Pick a random index
+-						index = Math.floor(Math.random() * counter);
+-						// Decrease counter by 1
+-						counter--;
+-						// And swap the last element with it
+-						temp = array[counter];
+-						array[counter] = array[index];
+-						array[index] = temp;
+-					}
++			if ( questions.length < size)
++				size = questions.length;
++			// quiz will have 20 questions at max
++			for(i=0;i<size;i++)
++				array[i] = i;
++			// randomizing this array
++			
++			if(questions.length < 20)   {
++				var counter = array.length, temp, index;
++				// While there are elements in the array
++				while (counter > 0) {
++					// Pick a random index
++					index = Math.floor(Math.random() * counter);
++					// Decrease counter by 1
++					counter--;
++					// And swap the last element with it
++					temp = array[counter];
++					array[counter] = array[index];
++					array[index] = temp;
++				}
+ 				    
+-                } else {
+-					var m = questions.length;
+-					var stream=[];
+-					for(var i=0;i<m;i++)
+-						stream[i] = i;
+-				
+-					for(i=0;i<size;i++)
+-						array[i] = stream[i];
++			} else {
++				var m = questions.length;
++				var stream=[];
++				for(var i=0;i<m;i++)
++					stream[i] = i;				
++				for(i=0;i<size;i++)
++					array[i] = stream[i];
+ 					
+-					min = 10;
+-					max = 100000;
+-					
+-					for(var j=size; j<m ;j++){
++				min = 10;
++				max = 100000;
++				
++				for(var j=size; j<m ;j++){
+ 						
+-						var n = Math.floor(Math.random() * (max - min + 1)) + min;
+-						n = parseInt(n);
+-						n = n%(j+1);
++					var n = Math.floor(Math.random() * (max - min + 1)) + min;
++					n = parseInt(n);
++					n = n%(j+1);
+ 						
+-						if(n<size)
+-							array[n] = stream[j];
+-					}
++					if(n<size)
++						array[n] = stream[j];
++				}
+ 					
+-					var low = 0, high = 9;
+-					while (low<9){
+-						var temp = array[low];
+-						array[low] = array[high];
+-						array[high] = temp;
+-						low++;
+-						high++;
+-					}
+-					//console.log(array);
++				var low = 0, high = 9;
++				while (low<9){
++					var temp = array[low];
++					array[low] = array[high];
++					array[high] = temp;
++					low++;
++					high++;
+ 				}
+-            }
+-
+-            if(loading == undefined) {
+-                chrome.storage.local.set({'localData': {'questions': questions, 'array':array}});
+-            }
++			}
+ 			
+ 			var result = '<img src="images/geeksforgeeks-logo.png">  <hr><div><ul>';
+ 			var instructions = [];
+@@ -203,7 +167,7 @@
+                 //console.log(questions[array[i]].question);
+                 result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
+ 					for(var j =0; j< questions[array[i]].options.length ; j++){
+-						result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d class = "opt" >'+ questions[array[i]].options[j] + '</d><br>';
++						result = result + '<div class = "opt"><input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<span>'+ questions[array[i]].options[j] + '</span></div><br>';
+ 					}
+                 result = result + '<br></li>';
+ 				}
+@@ -260,15 +224,6 @@
+ 				};
+ 								
+ 				$("#ms_timer").each(countDown);
+-				
+-				$(".opt").mouseover(function () {
+-				$(this).css("font-weight", "bold");
+-				});
+-			
+-				$(".opt").mouseout(function () {
+-					$(this).css("font-weight", "normal");
+-				});
+-				
+             });
+ 
+             var changeOptions =  function(e, that) {
+@@ -279,10 +234,10 @@
+                     var question = ele.attr('name');
+                     selectedOptions.push({'optionChoosed':optionChoosed, 'question':question});
+                 });
+-                chrome.storage.local.set({'selectedOptions': selectedOptions});
++                // chrome.storage.local.set({'selectedOptions': selectedOptions});
+             }
+ 
+-            wrapper('d', "click", function(e, that) {
++            wrapper('.opt', "click", function(e, that) {
+                 $(that).prev().prop("checked", true);
+                 changeOptions(e, $(that).prev());
+             });
+@@ -290,8 +245,7 @@
+             wrapper('input:radio', "change", changeOptions);
+ 
+             wrapper('#reset', "click", function(e) {
+-                chrome.storage.local.clear();
+-                location.reload();
++                $('body').html(oldHtml);
+             });
+ 			
+ 			wrapper('#reset1', "click", function(e) {
+@@ -307,7 +261,7 @@
+                 if(!submited) {
+                     var score = [];
+                     var s = 0;
+-                    chrome.storage.local.set({'quizSubmited': true});
++                    // chrome.storage.local.set({'quizSubmited': true});
+                     for(i = 0; i< size ; i++){
+                         var ansSelected = $('input[name=' + i + ']:checked').attr('value');
+                         $.each($('input[name=' + i + ']'), function (key, val) {
+@@ -364,10 +318,10 @@
+                 }
+             });
+         };
+-		
++
+         $('.checkbox_text').click(function() {
+-            var checked = $(this).prev().prop('checked');
+-            $(this).prev().prop('checked', !checked);
++            var checked = $(this).children('input').prop('checked');
++            $(this).children('input').prop('checked', !checked);
+         });
+ 		
+     });
+diff --git a/manifest.json b/manifest.json
+index 85a4744..47c8bde 100644
+--- a/manifest.json
++++ b/manifest.json
+@@ -4,15 +4,15 @@
+ 	"name":"GeeksQuiz",
+ 	"description": "Generate random quiz from geeksquiz.",
+ 	"version": "1.0",
++	"app": {
++		"background": {
++      		"scripts": ["js/background.js"]
++    	}
++	},
+ 	"permissions": [
+ 		"http://*/",
+ 		"https://*/",
+ 		"storage"
+   	],
+-	"browser_action": {
+-		"default_icon": "images/logo.png",
+-		"default_popup": "popup.html",
+-		"default_title": "GeeksQuiz"
+-	},
+-	"content_security_policy": "script-src 'self' https://code.jquery.com; object-src 'self'"
++	"icons": { "16": "images/logo.png", "128": "images/logo128.png" }
+ }
+\ No newline at end of file
+diff --git a/popup.html b/popup.html
+index c910f9a..f0695fd 100644
+--- a/popup.html
++++ b/popup.html
+@@ -6,11 +6,17 @@
+ <html>
+     <head>
+         <style>
+-            html, body
+-            {
+-                height: 500px;
+-                width: 500px;
++            html, body {
++                overflow-y: visible;
+             }   
++            .checkbox_text:hover{
++                background: #5cb85c;
++                color: #fff
++            }
++            .opt:hover{
++                background: #5cb85c;
++                color: #fff
++            }
+         </style>
+         <link rel="stylesheet" href="css/bootstrap.min.css">
+         <script src="js/jquery-2.1.4.min.js"></script>
+@@ -20,11 +26,11 @@
+     </head>
+     <body>
+ 		<div style = "position: fixed; width : 100% ; height : 125px; padding : 10px; background-color: white;">
+-        <img src="images/geeksforgeeks-logo.png"><hr>
++        <img src="images/geeksforgeeks-logo.png" align="middle"><hr>
+ 		</div>
+ 		<div style = "padding-top : 135px">
+         <div class="panel-group" id="accordion">
+-            <div class="panel panel-default">
++            <div class="panel panel-default" style="margin-right: 80px; margin-left: 80px;">
+                 <div class="panel-heading" >
+                     <a class="accordion-toggle panel-title" data-toggle="collapse" data-parent="#accordion" href="#algo">
+                         <h2 class="panel-title">
+@@ -34,25 +40,55 @@
+                 </div>
+                 <div id="algo" class="panel-collapse collapse">
+                     <div class="panel-body">
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/analysis-of-algorithms/"><c class="checkbox_text"> Analysis of Algorithms</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/searching-and-sorting/"><c class="checkbox_text"> Sorting</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/divide-and-conquer/"><c class="checkbox_text"> Divide and Conquer</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/greedy-algorithms/"><c class="checkbox_text"> Greedy Algorithms</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/dynamic-programming/"><c class="checkbox_text"> Dynamic Programming</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/backtracking/"><c class="checkbox_text"> Backtracking</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/misc-2/"><c class="checkbox_text"> Misc</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/np-complete/"><c class="checkbox_text"> NP Complete</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/searching/"><c class="checkbox_text"> Searching</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/analysis-of-algorithms-recurrences/"><c class="checkbox_text"> Analysis of Algorithms (Recurrences)</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/recursion/"><c class="checkbox_text"> Recursion</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/bit-algorithms/"><c class="checkbox_text"> Bit Algorithms</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/graph-traversals/"><c class="checkbox_text"> Graph Traversals</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/graph-shortest-paths/"><c class="checkbox_text"> Graph Shortest Paths</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/graph-minimum-spanning-tree/"><c class="checkbox_text"> Graph Minimum Spanning Tree</c><br>
++                    <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/analysis-of-algorithms/"><span>Analysis of Algorithms</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/searching-and-sorting/"><span>Sorting</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/divide-and-conquer/"><span>Divide and Conquer</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/greedy-algorithms/"><span>Greedy Algorithms</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/dynamic-programming/"><span>Dynamic Programming</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/backtracking/"><span>Backtracking</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/misc-2/"><span>Misc</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/np-complete/"><span>NP Complete</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/searching/"><span>Searching</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/analysis-of-algorithms-recurrences/"><span>Analysis of Algorithms (Recurrences)</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/recursion/"><span>Recursion</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/bit-algorithms/"><span>Bit Algorithms</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/graph-traversals/"><span>Graph Traversals</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/graph-shortest-paths/"><span>Graph Shortest Paths</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/algorithms/graph-minimum-spanning-tree/"><span>Graph Minimum Spanning Tree</span><br>
++                            </div>
+                     </div>
+                 </div>
+             </div>
+-            <div class="panel panel-default">
++            <div class="panel panel-default" style="margin-right: 80px; margin-left: 80px;">
+                 <div class="panel-heading">
+                     <a class="accordion-toggle panel-title" data-toggle="collapse" data-parent="#accordion" href="#ds">
+                         <h4 class="panel-title">
+@@ -62,23 +98,49 @@
+                 </div>
+                 <div id="ds" class="panel-collapse collapse">
+                     <div class="panel-body">
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/linked-list/"><c class="checkbox_text"> Linked List</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/stack/"><c class="checkbox_text"> Stack</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/queue/"><c class="checkbox_text"> Queue</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/binary-trees/"><c class="checkbox_text"> Binary Trees</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/tree-traversals/"><c class="checkbox_text"> Tree Traversals</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/binary-search-trees/"><c class="checkbox_text"> Binary Search Trees</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/balanced-binary-search-trees/"><c class="checkbox_text"> Balanced Binary Search Trees</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/graph/"><c class="checkbox_text"> Graph</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/hash/"><c class="checkbox_text"> Hash</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/array/"><c class="checkbox_text"> Array</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/misc-3/"><c class="checkbox_text"> Misc</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/b-and-b-trees/"><c class="checkbox_text"> B and B+ Trees</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/heap/"><c class="checkbox_text"> Heap</c><br>
++                    <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/linked-list/"><span>Linked List</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/stack/"><span>Stack</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/queue/"><span>Queue</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/binary-trees/"><span>Binary Trees</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/tree-traversals/"><span>Tree Traversals</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/binary-search-trees/"><span>Binary Search Trees</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/balanced-binary-search-trees/"><span>Balanced Binary Search Trees</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/graph/"><span>Graph</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/hash/"><span>Hash</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/array/"><span>Array</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/misc-3/"><span>Misc</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/b-and-b-trees/"><span>B and B+ Trees</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/data-structure/heap/"><span>Heap</span><br>
++                            </div>
+                     </div>
+                 </div>
+             </div>
+-            <div class="panel panel-default">
++            <div class="panel panel-default" style="margin-right: 80px; margin-left: 80px;">
+                 <div class="panel-heading">
+                     <a class="accordion-toggle panel-title" data-toggle="collapse" data-parent="#accordion" href="#c">
+                         <h4 class="panel-title">
+@@ -88,26 +150,58 @@
+                 </div>
+                 <div id="c" class="panel-collapse collapse">
+                     <div class="panel-body">
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/input-and-output/"><c class="checkbox_text"> Input and Output</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/operators/"><c class="checkbox_text"> Operators</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/loops-control-structure/"><c class="checkbox_text"> Loops & Control Structure</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/structure-union/"><c class="checkbox_text"> Structure & Union</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/macro-preprocessor/"><c class="checkbox_text"> Macro & Preprocessor</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/arrays-pointers/"><c class="checkbox_text"> Arrays</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/pointers/"><c class="checkbox_text"> Pointer Basics</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/string/"><c class="checkbox_text"> String</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/functions/"><c class="checkbox_text"> Functions</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/storage-classes/"><c class="checkbox_text"> Storage Classes and Type Qualifiers</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/data-types/"><c class="checkbox_text"> Data Types</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/dynamic-memory-allocation/"><c class="checkbox_text"> Dynamic Memory Allocation</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/misc/"><c class="checkbox_text"> Misc</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/advanced-pointer-c/"><c class="checkbox_text"> Advanced Pointer</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/variable-declaration-and-scope/"><c class="checkbox_text"> Variable Declaration and Scope</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/file-handling/"><c class="checkbox_text"> File Handling</c><br>
++                    <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/input-and-output/"><span>Input and Output</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/operators/"><span>Operators</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/loops-control-structure/"><span>Loops & Control Structure</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/structure-union/"><span>Structure & Union</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/macro-preprocessor/"><span>Macro & Preprocessor</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/arrays-pointers/"><span>Arrays</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/pointers/"><span>Pointer Basics</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/string/"><span>String</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/functions/"><span>Functions</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/storage-classes/"><span>Storage Classes and Type Qualifiers</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/data-types/"><span>Data Types</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/dynamic-memory-allocation/"><span>Dynamic Memory Allocation</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/misc/"><span>Misc</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/advanced-pointer-c/"><span>Advanced Pointer</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/variable-declaration-and-scope/"><span>Variable Declaration and Scope</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-language-2/file-handling/"><span>File Handling</span><br>
++                            </div>
+                     </div>
+                 </div>
+             </div>
+-            <div class="panel panel-default">
++            <div class="panel panel-default" style="margin-right: 80px; margin-left: 80px;">
+                 <div class="panel-heading">
+                     <a class="accordion-toggle panel-title" data-toggle="collapse" data-parent="#accordion" href="#cpp">
+                         <h4 class="panel-title">
+@@ -117,27 +211,59 @@
+                 </div>
+                 <div id="cpp" class="panel-collapse collapse">
+                     <div class="panel-body">
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/constructors/"><c class="checkbox_text"> Constructors</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/references/"><c class="checkbox_text"> References</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/class-and-object/"><c class="checkbox_text"> Class and Object</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/misc-c/"><c class="checkbox_text"> Misc C++</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/destructors/"><c class="checkbox_text"> Destructors</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/operator-overloading/"><c class="checkbox_text"> Operator Overloading</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/this-pointer/"><c class="checkbox_text"> this pointer</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/function-overloading-2/"><c class="checkbox_text"> Function Overloading and Default Arguments</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/static-keyword/"><c class="checkbox_text"> Static Keyword</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/friend-function-and-class/"><c class="checkbox_text"> friend keyword</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/inheritance/"><c class="checkbox_text"> Inheritance</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/const-keyword/"><c class="checkbox_text"> const keyword</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/new-and-delete/"><c class="checkbox_text"> new and delete</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/virtual-functions/"><c class="checkbox_text"> Virtual Functions</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/templates/"><c class="checkbox_text"> Templates</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/exception-handling/"><c class="checkbox_text"> Exception Handling</c><br>
++                    <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/constructors/"><span>Constructors</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/references/"><span>References</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/class-and-object/"><span>Class and Object</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/misc-c/"><span>Misc C++</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/destructors/"><span>Destructors</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/operator-overloading/"><span>Operator Overloading</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/this-pointer/"><span>this pointer</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/function-overloading-2/"><span>Function Overloading and Default Arguments</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/static-keyword/"><span>Static Keyword</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/friend-function-and-class/"><span>friend keyword</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/inheritance/"><span>Inheritance</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/const-keyword/"><span>const keyword</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/new-and-delete/"><span>new and delete</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/virtual-functions/"><span>Virtual Functions</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/templates/"><span>Templates</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/c-plus-plus/exception-handling/"><span>Exception Handling</span><br>
++                            </div>
+                     </div>
+                 </div>
+             </div>
+ 			
+-			 <div class="panel panel-default">
++			 <div class="panel panel-default" style="margin-right: 80px; margin-left: 80px;">
+                 <div class="panel-heading">
+                     <a class="accordion-toggle panel-title" data-toggle="collapse" data-parent="#accordion" href="#os">
+                         <h4 class="panel-title">
+@@ -149,16 +275,26 @@
+ 			
+ 			<div id="os" class="panel-collapse collapse">
+                     <div class="panel-body">
+-						<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/operating-systems/process-synchronization/"><c class="checkbox_text">Process Management</c><br>
+-						<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/cpu-scheduling/"><c class="checkbox_text">CPU Scheduling</c><br>
+-						<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/operating-systems/memory-management/"><c class="checkbox_text">Memory Management</c><br>
+-						<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/deadlock/"><c class="checkbox_text">Deadlock</c><br>
+-						<input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/operating-systems/iinput-output-systems/"><c class="checkbox_text">Input Output System</c><br>
++                    <div class="checkbox_text">
++						  <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/operating-systems/process-synchronization/"><span>rocess Management</span><br>
++                        </div>
++                        <div class="checkbox_text">
++						  <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/cpu-scheduling/"><span>PU Scheduling</span><br>
++                        </div>
++                        <div class="checkbox_text">
++						  <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/operating-systems/memory-management/"><span>emory Management</span><br>
++                        </div>
++                        <div class="checkbox_text">
++						  <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/deadlock/"><span>eadlock</span><br>
++                        </div>
++                        <div class="checkbox_text">
++						  <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/operating-systems/iinput-output-systems/"><span>nput Output System</span><br>
++                        </div>
+ 					</div>
+ 				</div>
+ 			</div>
+ 			
+-            <div class="panel panel-default">
++            <div class="panel panel-default" style="margin-right: 80px; margin-left: 80px;">
+                 <div class="panel-heading">
+                     <a class="accordion-toggle panel-title" data-toggle="collapse" data-parent="#accordion" href="#java">
+                         <h4 class="panel-title">
+@@ -169,24 +305,46 @@
+ 				
+                 <div id="java" class="panel-collapse collapse">
+                     <div class="panel-body">
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/inheritance-2/"><c class="checkbox_text"> Inheritance</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/abstract-class-and-interface-in-java/"><c class="checkbox_text"> Abstract Class and Interface</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/arrays/"><c class="checkbox_text"> Arrays</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/data-types-2/"><c class="checkbox_text"> Data Types</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/constructors-2/"><c class="checkbox_text"> Constructors</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/exception-handling-2/"><c class="checkbox_text"> Exception Handling</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/packages/"><c class="checkbox_text"> Packages</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/class-and-object-2/"><c class="checkbox_text"> Class and Object</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/functions-2/"><c class="checkbox_text"> Functions</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/final-keyword/"><c class="checkbox_text"> final keyword</c><br>
+-                            <input type="checkbox" class="checkboxCategory" data-url="http://geeksquiz.com/java/operators/"><c class="checkbox_text"> Operators</c><br>
++                    <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/java/inheritance-2/"><span>Inheritance</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/java/abstract-class-and-interface-in-java/"><span>Abstract Class and Interface</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/java/arrays/"><span>Arrays</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/java/data-types-2/"><span>Data Types</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/java/constructors-2/"><span>Constructors</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/java/exception-handling-2/"><span>Exception Handling</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/java/packages/"><span>Packages</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/java/class-and-object-2/"><span>Class and Object</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/java/functions-2/"><span>Functions</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/java/final-keyword/"><span>final keyword</span><br>
++                            </div>
++                            <div class="checkbox_text">
++                                <input type="checkbox" style="margin: 5px 3px 0px 7px;" class="checkboxCategory" data-url="http://geeksquiz.com/java/operators/"><span>Operators</span><br>
++                            </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+-        <div class="btn-group btn-group-justified" role="group">
++        <div class="btn-group pull-right" style="margin-right: 80px; margin-left: 50px;" role="group">
+             <div class="btn-group" role="group">
+-                <button class="btn btn-success" type="submit" id="submit">Submit</button>
++                <button class="btn btn-success" type="submit" id="submit">Generate Quiz</button>
+             </div>
+         </div>
+ 		</div>

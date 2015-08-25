@@ -1,33 +1,5 @@
 (function() {
     $(document).ready(function(){
-        chrome.storage.local.get('localData', function (obj) {
-            if(obj.hasOwnProperty('localData')) {
-                var questions =  obj['localData']['questions'];
-                var array = obj['localData']['array']
-                allContentLoaded(questions, array, true);
-                chrome.storage.local.get('selectedOptions', function(obj) {
-                    var selectedOptions = obj['selectedOptions'];
-                    for(var key in  selectedOptions) {
-                        var question = selectedOptions[key]['question'];
-                        var ele = $('input[name="' + question + '"]');
-                        $.each(ele, function(k, val) {
-                            val = $(val);
-                            if(val.attr('value') == selectedOptions[key]['optionChoosed']) {
-                                val.prop('checked', true)
-                            }
-                        });
-                    }
-                    chrome.storage.local.get('quizSubmited', function(obj) {
-                        if(obj.hasOwnProperty('quizSubmited')) {
-                            var quizSubmited =  obj['quizSubmited'];
-                            if(quizSubmited) {
-                                $('#submitanswers').trigger('click');
-                            }
-                        }
-                    });
-                });
-            }
-        });
 
 		function wrapper(id, e, cb) {
 			$(document).on(e, id, function(e){
@@ -38,6 +10,8 @@
         var dataUrls = [];
 		
 		var array = [];
+
+		var oldHtml;
 				
         wrapper('#submit', "click", function(e) {
             e.preventDefault();
@@ -94,10 +68,11 @@
                     ++contentLeftToLoad.loaded;
                 });
             });
+			oldHtml = $('body').html();
             $('body').html("<img src='images/loading.gif'>");
         });
 
-        var allContentLoaded = function(questions, arrayStored, loading) {
+        var allContentLoaded = function(questions) {
 			
 			var mintaken ,sectaken,iv;
 			var ct = 0;
@@ -105,68 +80,57 @@
 			var f  = 0;
 			
             var size = 20;
-            if(arrayStored != undefined) {
-                array = arrayStored;
-                size = array.length;	
-            } else {
-                if ( questions.length < size)
-                    size = questions.length;
-                // quiz will have 20 questions at max
-                for(i=0;i<size;i++)
-					array[i] = i;
-                // randomizing this array
-				
-				if(questions.length < 20)   {
-					var counter = array.length, temp, index;
-					// While there are elements in the array
-					while (counter > 0) {
-						// Pick a random index
-						index = Math.floor(Math.random() * counter);
-						// Decrease counter by 1
-						counter--;
-						// And swap the last element with it
-						temp = array[counter];
-						array[counter] = array[index];
-						array[index] = temp;
-					}
-				    
-                } else {
-					var m = questions.length;
-					var stream=[];
-					for(var i=0;i<m;i++)
-						stream[i] = i;
-				
-					for(i=0;i<size;i++)
-						array[i] = stream[i];
-					
-					min = 10;
-					max = 100000;
-					
-					for(var j=size; j<m ;j++){
-						
-						var n = Math.floor(Math.random() * (max - min + 1)) + min;
-						n = parseInt(n);
-						n = n%(j+1);
-						
-						if(n<size)
-							array[n] = stream[j];
-					}
-					
-					var low = 0, high = 9;
-					while (low<9){
-						var temp = array[low];
-						array[low] = array[high];
-						array[high] = temp;
-						low++;
-						high++;
-					}
-					//console.log(array);
+			if ( questions.length < size)
+				size = questions.length;
+			// quiz will have 20 questions at max
+			for(i=0;i<size;i++)
+				array[i] = i;
+			// randomizing this array
+			
+			if(questions.length < 20)   {
+				var counter = array.length, temp, index;
+				// While there are elements in the array
+				while (counter > 0) {
+					// Pick a random index
+					index = Math.floor(Math.random() * counter);
+					// Decrease counter by 1
+					counter--;
+					// And swap the last element with it
+					temp = array[counter];
+					array[counter] = array[index];
+					array[index] = temp;
 				}
-            }
-
-            if(loading == undefined) {
-                chrome.storage.local.set({'localData': {'questions': questions, 'array':array}});
-            }
+				    
+			} else {
+				var m = questions.length;
+				var stream=[];
+				for(var i=0;i<m;i++)
+					stream[i] = i;				
+				for(i=0;i<size;i++)
+					array[i] = stream[i];
+					
+				min = 10;
+				max = 100000;
+				
+				for(var j=size; j<m ;j++){
+						
+					var n = Math.floor(Math.random() * (max - min + 1)) + min;
+					n = parseInt(n);
+					n = n%(j+1);
+						
+					if(n<size)
+						array[n] = stream[j];
+				}
+					
+				var low = 0, high = 9;
+				while (low<9){
+					var temp = array[low];
+					array[low] = array[high];
+					array[high] = temp;
+					low++;
+					high++;
+				}
+			}
 			
 			var result = '<img src="images/geeksforgeeks-logo.png">  <hr><div><ul>';
 			var instructions = [];
@@ -203,7 +167,7 @@
                 //console.log(questions[array[i]].question);
                 result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
 					for(var j =0; j< questions[array[i]].options.length ; j++){
-						result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d class = "opt" >'+ questions[array[i]].options[j] + '</d><br>';
+						result = result + '<div class = "opt"><input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<span>'+ questions[array[i]].options[j] + '</span></div><br>';
 					}
                 result = result + '<br></li>';
 				}
@@ -260,15 +224,6 @@
 				};
 								
 				$("#ms_timer").each(countDown);
-				
-				$(".opt").mouseover(function () {
-				$(this).css("font-weight", "bold");
-				});
-			
-				$(".opt").mouseout(function () {
-					$(this).css("font-weight", "normal");
-				});
-				
             });
 
             var changeOptions =  function(e, that) {
@@ -279,10 +234,10 @@
                     var question = ele.attr('name');
                     selectedOptions.push({'optionChoosed':optionChoosed, 'question':question});
                 });
-                chrome.storage.local.set({'selectedOptions': selectedOptions});
+                // chrome.storage.local.set({'selectedOptions': selectedOptions});
             }
 
-            wrapper('d', "click", function(e, that) {
+            wrapper('.opt', "click", function(e, that) {
                 $(that).prev().prop("checked", true);
                 changeOptions(e, $(that).prev());
             });
@@ -290,8 +245,7 @@
             wrapper('input:radio', "change", changeOptions);
 
             wrapper('#reset', "click", function(e) {
-                chrome.storage.local.clear();
-                location.reload();
+                $('body').html(oldHtml);
             });
 			
 			wrapper('#reset1', "click", function(e) {
@@ -307,7 +261,7 @@
                 if(!submited) {
                     var score = [];
                     var s = 0;
-                    chrome.storage.local.set({'quizSubmited': true});
+                    // chrome.storage.local.set({'quizSubmited': true});
                     for(i = 0; i< size ; i++){
                         var ansSelected = $('input[name=' + i + ']:checked').attr('value');
                         $.each($('input[name=' + i + ']'), function (key, val) {
@@ -364,10 +318,10 @@
                 }
             });
         };
-		
+
         $('.checkbox_text').click(function() {
-            var checked = $(this).prev().prop('checked');
-            $(this).prev().prop('checked', !checked);
+            var checked = $(this).children('input').prop('checked');
+            $(this).children('input').prop('checked', !checked);
         });
 		
     });
