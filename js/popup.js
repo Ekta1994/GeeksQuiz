@@ -100,7 +100,7 @@
         var allContentLoaded = function(questions, arrayStored, loading) {
 			
 			var mintaken ,sectaken,iv;
-			var ct = 9;
+			var ct = 0;
 			var s = 59;
 			var f  = 0;
 			
@@ -187,6 +187,8 @@
 			
 			$('body').html(result);
 			
+			var flag = 0;
+			
 			wrapper('#startquiz', "click", function(e) {
 				
 				var result = '<img src="images/geeksforgeeks-logo.png"><hr>';
@@ -226,7 +228,7 @@
 				var countDown = function() {
 					var elem = $(this);
 					var display = function() {
-						var b = '<div id = "tb" align = "center" style = "border : 2px solid ; border-radius : 7px; width : 40%; height : 7% ; padding : 2%"> ' + ct + " minutes " + s + " seconds " + ' </div>';
+						var b =  '<div align = "center"> ' + ct + " minutes " + s + " seconds " + '</div><hr>';
 						//elem.text( ct + " minutes " + s + " seconds ");
 						elem.html(b);
 						mintaken = ct;
@@ -243,6 +245,7 @@
 						display();
 						if ( ct == -1 )
 						{
+							flag = 1;
 							alert("You have exceeded the time limit! The quiz without the time limit will be reloaded now.");
 							//allContentLoaded(questions, array);
 							clearInterval(iv);
@@ -323,8 +326,16 @@
                         $('input[name=' + i + ']').remove();
                     }
 					
-					mintaken = 9 - mintaken;
+					mintaken = 0 - mintaken;
 					sectaken = 59 - sectaken;
+					
+					var timeresult = "";
+					
+					if(flag == 0)  // by line 248, this should be set as 1 when time exceeds but dont know y not happening
+						timeresult = 'Total time taken : ' + mintaken + " minutes " + sectaken + " seconds ";
+					else if ( flag == 1)
+						timeresult = "You exceeded the time limit"
+					
                     $('ul').after('<font color="brown"><b><center>Total time taken : ' + mintaken + " minutes " + sectaken + " seconds " + '<center>Your Score is: ' + s + '/' + size + '</center></b></font><br>');
                     $("body").animate({ scrollTop: $(document).height()-$(window).height() });
                     submited = true;
