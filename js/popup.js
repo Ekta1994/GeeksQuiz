@@ -1,5 +1,5 @@
 (function() {
-    $(document).ready(function(){
+	$(document).ready(function(){
 
 		function wrapper(id, e, cb) {
 			$(document).on(e, id, function(e){
@@ -12,9 +12,9 @@
 		 */
 		wrapper('.checkbox_text', "click", function(e, that) {
 			var input = that.prev().children('input');
-            var checked = input.prop('checked');
-            input.prop('checked', !checked);
-        });
+			var checked = input.prop('checked');
+			input.prop('checked', !checked);
+		});
 		
 		var array = [];
 
@@ -23,74 +23,74 @@
 		/*
 		 * Function triggered when user submits it's prefered topics
 		 */	
-        wrapper('#submit', "click", function(e) {
-            e.preventDefault();
+		wrapper('#submit', "click", function(e) {
+			e.preventDefault();
 			
-            var questions = [];
-            var checkboxCategory =  $('.checkboxCategory:checked');
-            var contentLeftToLoad = {
-                'totalSize': checkboxCategory.size(),
-                'loaded': 0,
-            };
+			var questions = [];
+			var checkboxCategory =  $('.checkboxCategory:checked');
+			var contentLeftToLoad = {
+				'totalSize': checkboxCategory.size(),
+				'loaded': 0,
+			};
 
-            /*
-             * Looks for changes in "contentLeftToLoad" object property "loaded".
-             */
-            watch(contentLeftToLoad, 'loaded', function () {
-                if(contentLeftToLoad.loaded == contentLeftToLoad.totalSize) {
-                    allContentLoaded(questions);
-                }
-            });
+			/*
+			 * Looks for changes in "contentLeftToLoad" object property "loaded".
+			 */
+			watch(contentLeftToLoad, 'loaded', function () {
+				if(contentLeftToLoad.loaded == contentLeftToLoad.totalSize) {
+					allContentLoaded(questions);
+				}
+			});
 			
 			function timer (){
 				alert('The time of quiz is over!!');
 			}
 			
-            checkboxCategory.each(function() {
-                var that = this;
-                var dataUrl = $(this).attr('data-url');
-                ajax(dataUrl, 'get').done(function(data){
-                    var elements = $(data);
-                    var found = elements.find('.mtq_question.mtq_scroll_item-1');
-                    $.each(found, function(key, val){
-                        val = $(val);
-                        var question = val.children('.mtq_question_text').html();
-                        var optionsHtml = val.find('.mtq_answer_text');
+			checkboxCategory.each(function() {
+				var that = this;
+				var dataUrl = $(this).attr('data-url');
+				ajax(dataUrl, 'get').done(function(data){
+					var elements = $(data);
+					var found = elements.find('.mtq_question.mtq_scroll_item-1');
+					$.each(found, function(key, val){
+						val = $(val);
+						var question = val.children('.mtq_question_text').html();
+						var optionsHtml = val.find('.mtq_answer_text');
 						var ans = val.find('.mtq_marker.mtq_correct_marker');
 						var regexp = /mtq_marker-\d+-(\d+)-\d+/g;
 						ans = $(ans).attr('id');
-                        var discuss = val.find('.mtq_answer_table').next().next().children('a').attr('href');
+						var discuss = val.find('.mtq_answer_table').next().next().children('a').attr('href');
 						var match = regexp.exec(ans);
 						//console.log(match);
 						ans = match[1];
-                        var options = [];
-                        $.each(optionsHtml, function(key, val){
-                            val = $(val);
-                            options.push(val.html());
-                        });
+						var options = [];
+						$.each(optionsHtml, function(key, val){
+							val = $(val);
+							options.push(val.html());
+						});
 						
-                        questions.push({
-                            'question': question,
-                            'options': options,
+						questions.push({
+							'question': question,
+							'options': options,
 							'answer': ans,
-                            'discuss': discuss
-                        });
-                    });
-                    ++contentLeftToLoad.loaded;
-                });
-            });
+							'discuss': discuss
+						});
+					});
+					++contentLeftToLoad.loaded;
+				});
+			});
 			oldHtml = $('body').html();
-            $('body').html("<img src='images/loading.gif'>");
-        });
+			$('body').html("<img src='images/loading.gif'>");
+		});
 
-        var allContentLoaded = function(questions) {
+		var allContentLoaded = function(questions) {
 			
 			var mintaken ,sectaken,iv;
 			var ct = 0;
 			var s = 59;
 			var f  = 0;
 			
-            var size = 20;
+			var size = 20;
 			if ( questions.length < size)
 				size = questions.length;
 			// quiz will have 20 questions at max
@@ -151,8 +151,8 @@
 			instructions += '<li>If you wish to submit before the maximum time limit, click on <b><i> Submit </b></i> button. </li> <br></ul> ';
 			
 			instructions += '<div class="btn-group" role="group" style="padding: 5px;">\
-                        <button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="startquiz">Start the quiz</button>\
-                    </div>';
+						<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="startquiz">Start the quiz</button>\
+					</div>';
 					
 			instructions += '<div class="btn-group" role="group" style="padding: 5px;">\
 							<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Select the topics again</button>\
@@ -171,28 +171,26 @@
 				
 				var result = '<div style= "padding-top : 135px">';
 				var remoteImage;
-                var toLoad = { 'images': [] };
-                for(i=0;i<size;i++) {
-                	result = result + '';
-                	var question = questions[array[i]].question;
-                	var regexp = /src="(.+?)"/gmi;
-                	var match;
-                	while((match = regexp.exec(question)) != null) {
-    					toLoad.images.push(match[1]);
-                	};
-                	result = result + '<div style="margin-right: 80px; margin-left: 80px;">' + (i+1) + '. ' + questions[array[i]].question + '<br>';
+				var toLoad = { 'images': [] };
+				for(i=0;i<size;i++) {
+					result = result + '';
+					var question = questions[array[i]].question;
+					var regexp = /src="(.+?)"/gmi;
+					var match;
+					while((match = regexp.exec(question)) != null) {
+						toLoad.images.push(match[1]);
+					};
+					result = result + '<div style="margin-right: 80px; margin-left: 80px;">' + (i+1) + '. ' + questions[array[i]].question + '<br>';
 					for(var j =0; j< questions[array[i]].options.length ; j++){
 						var option = questions[array[i]].options[j];
-                		while((match = regexp.exec(option)) != null) {
-	    					toLoad.images.push(match[1]);
-                		};
+						while((match = regexp.exec(option)) != null) {
+							toLoad.images.push(match[1]);
+						};
 						result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<span class = "opt" >'+ questions[array[i]].options[j] + '</span><br>';
 					}
-                	result = result + '<br></div>';
+					result = result + '<br></div>';
 				}
-                
 				result = result + '<div>';
-				 
 				result = result + '\
 					<div class="btn-group btn-group-justified" role="group">\
 						<div class="btn-group" role="group" style="padding: 5px;">\
@@ -210,11 +208,11 @@
 				r = r + result;
 				$('body').html(r);
 				$.each(toLoad.images, function(key, image) {
-      				remoteImage = new RAL.RemoteImage(image);
-      				$('img[src="' + toLoad.images[key] + '"]').replaceWith(remoteImage);
-      				RAL.Queue.add(remoteImage);
+					remoteImage = new RAL.RemoteImage(image);
+					$('img[src="' + toLoad.images[key] + '"]').replaceWith(remoteImage);
+					RAL.Queue.add(remoteImage);
 				});
-                RAL.Queue.setMaxConnections(4);
+				RAL.Queue.setMaxConnections(4);
 				RAL.Queue.start();
 				$("body").animate({ scrollTop: 0 });
 				//$("body").animate({ scrollTop: $(document).height()-$(window).height() });
@@ -259,66 +257,63 @@
 					$(this).css("font-weight", "normal");
 				});
 				
-            });
+			});
 
-            var changeOptions =  function(e, that) {
-                var selectedOptions = []
-                $.each($('input:checked'), function() {
-                    var ele = $(this);
-                    var optionChoosed = ele.val();
-                    var question = ele.attr('name');
-                    selectedOptions.push({'optionChoosed':optionChoosed, 'question':question});
-                });
-                // chrome.storage.local.set({'selectedOptions': selectedOptions});
-            }
+			var changeOptions =  function(e, that) {
+				var selectedOptions = []
+				$.each($('input:checked'), function() {
+					var ele = $(this);
+					var optionChoosed = ele.val();
+					var question = ele.attr('name');
+					selectedOptions.push({'optionChoosed':optionChoosed, 'question':question});
+				});
+			}
 
-            wrapper('d', "click", function(e, that) {
-                $(that).prev().prop("checked", true);
-                changeOptions(e, $(that).prev());
-            });
+			wrapper('d', "click", function(e, that) {
+				$(that).prev().prop("checked", true);
+				changeOptions(e, $(that).prev());
+			});
 
-            wrapper('input:radio', "change", changeOptions);
+			wrapper('input:radio', "change", changeOptions);
 
-            wrapper('#reset', "click", function(e) {
-                $('body').html(oldHtml);
-            });
+			wrapper('#reset', "click", function(e) {
+				$('body').html(oldHtml);
+			});
 			
 			wrapper('#reset1', "click", function(e) {
 				ct = 1;
 				s = 59;
-                allContentLoaded(questions, array);
-            });
+				allContentLoaded(questions, array);
+			});
 
-            var submited = false;
+			var submited = false;
 
-            wrapper('#submitanswers', "click", function(e) {
+			wrapper('#submitanswers', "click", function(e) {
 				clearInterval(iv);
-                if(!submited) {
-                    var score = [];
-                    var s = 0;
-                    // chrome.storage.local.set({'quizSubmited': true});
-                    for(i = 0; i< size ; i++){
-                        var ansSelected = $('input[name=' + i + ']:checked').attr('value');
-                        $.each($('input[name=' + i + ']'), function (key, val) {
-                            val = $(val).next();
-                            val.text((key+1) + '. ' + val.text())
-                            val.css('font-weight', 'bold');
-                            if(key+1 == questions[array[i]].options.length) {
-                                val.html(val.html() + '<br><br><a class="discuss" data-url="' + questions[array[i]].discuss + '" >Discuss</a>');
-                                val.html(val.html() + '<br>' + '<font color="green"><b>Solution is option: ' + questions[array[i]].answer + '</b></font>');
-                                if(ansSelected != questions[array[i]].answer && ansSelected != undefined) {
-                                    val.html(val.html() + '<br>' + '<font color="red"><b>Incorrect, Option Selected: ' + ansSelected + '</b></font>');
-                                }
-                                if(ansSelected == questions[array[i]].answer) {
-                                    ++s;
-                                    val.html(val.html() + '<br>' + '<font color="green"><b>Correct</b></font>');
-                                }
-                            }
-                        });
-    
-                        $('input[name=' + i + ']').remove();
-                    }
-					
+				if(!submited) {
+					var score = [];
+					var s = 0;
+					// chrome.storage.local.set({'quizSubmited': true});
+					for(i = 0; i< size ; i++){
+						var ansSelected = $('input[name=' + i + ']:checked').attr('value');
+						$.each($('input[name=' + i + ']'), function (key, val) {
+							val = $(val).next();
+							val.text((key+1) + '. ' + val.text())
+							val.css('font-weight', 'bold');
+							if(key+1 == questions[array[i]].options.length) {
+								val.html(val.html() + '<br><br><a class="discuss" data-url="' + questions[array[i]].discuss + '" >Discuss</a>');
+								val.html(val.html() + '<br>' + '<font color="green"><b>Solution is option: ' + questions[array[i]].answer + '</b></font>');
+								if(ansSelected != questions[array[i]].answer && ansSelected != undefined) {
+									val.html(val.html() + '<br>' + '<font color="red"><b>Incorrect, Option Selected: ' + ansSelected + '</b></font>');
+								}
+								if(ansSelected == questions[array[i]].answer) {
+									++s;
+									val.html(val.html() + '<br>' + '<font color="green"><b>Correct</b></font>');
+								}
+							}
+						});
+						$('input[name=' + i + ']').remove();
+					}
 					mintaken = 0 - mintaken;
 					sectaken = 59 - sectaken;
 					
@@ -329,38 +324,36 @@
 					else if ( flag == 1)
 						timeresult = "You exceeded the time limit"
 					
-                    $('ul').after('<font color="brown"><b><center>Total time taken : ' + mintaken + " minutes " + sectaken + " seconds " + '<center>Your Score is: ' + s + '/' + size + '</center></b></font><br>');
-                    $("body").animate({ scrollTop: $(document).height()-$(window).height() });
-                    submited = true;
-                    wrapper('.discuss', "click", function(e, that) {
-                        ajax(that.attr('data-url'), 'get').done(function(data) {
-                            data = $(data);
-                            data.find('script').each(function() {
-                                $(this).remove();
-                            });
-                            data.find('a').each(function() {
-                                var that = $(this);
-                                if(that.text() == "Quiz of this Question") {
-                                    that.remove();
-                                }
-                            });
-                            $('body').html('<img src="images/geeksforgeeks-logo.png"><hr>' + data.find('.entry-content').html() + '<a class="back">Back to quiz</a>');
-                            wrapper('.back', "click", function() {
-                                location.reload();
-                            });
-                        });
-                    });
-                }
-            });
-        };
-		
-    });
-    
-    function ajax(urlpassed, requestType, dynamicData) {
-        return $.ajax({
-            url: urlpassed,
-            type: requestType,
-            data: dynamicData
-        });
-    }
+					$('ul').after('<font color="brown"><b><center>Total time taken : ' + mintaken + " minutes " + sectaken + " seconds " + '<center>Your Score is: ' + s + '/' + size + '</center></b></font><br>');
+					$("body").animate({ scrollTop: $(document).height()-$(window).height() });
+					submited = true;
+					wrapper('.discuss', "click", function(e, that) {
+						ajax(that.attr('data-url'), 'get').done(function(data) {
+							data = $(data);
+							data.find('script').each(function() {
+								$(this).remove();
+							});
+							data.find('a').each(function() {
+								var that = $(this);
+								if(that.text() == "Quiz of this Question") {
+									that.remove();
+								}
+							});
+							$('body').html('<img src="images/geeksforgeeks-logo.png"><hr>' + data.find('.entry-content').html() + '<a class="back">Back to quiz</a>');
+							wrapper('.back', "click", function() {
+								location.reload();
+							});
+						});
+					});
+				}
+			});
+		};
+	});
+	function ajax(urlpassed, requestType, dynamicData) {
+		return $.ajax({
+			url: urlpassed,
+			type: requestType,
+			data: dynamicData
+		});
+	}
 }).call(this);
