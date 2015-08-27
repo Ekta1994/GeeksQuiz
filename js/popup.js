@@ -169,7 +169,7 @@
 				var r = '<div style = "position: fixed; width : 100% ; height : 125px; padding : 10px; background-color: white;"> <div><img src="images/geeksforgeeks-logo.png"> </div>'
 				r = r + '<div id="countdowntimer"><span id="ms_timer"></span></div></div>';
 				
-				var result = '<div style= "padding-top : 135px">';
+				var result = '<div class="questions" style= "padding-top : 135px">';
 				var remoteImage;
 				var toLoad = { 'images': [] };
 				for(i=0;i<size;i++) {
@@ -190,7 +190,7 @@
 					}
 					result = result + '<br></div>';
 				}
-				result = result + '<div>';
+				result = result + '</div>';
 				result = result + '\
 					<div class="btn-group btn-group-justified" role="group">\
 						<div class="btn-group" role="group" style="padding: 5px;">\
@@ -269,7 +269,7 @@
 				});
 			}
 
-			wrapper('d', "click", function(e, that) {
+			wrapper('.opt', "click", function(e, that) {
 				$(that).prev().prop("checked", true);
 				changeOptions(e, $(that).prev());
 			});
@@ -324,7 +324,7 @@
 					else if ( flag == 1)
 						timeresult = "You exceeded the time limit"
 					
-					$('ul').after('<font color="brown"><b><center>Total time taken : ' + mintaken + " minutes " + sectaken + " seconds " + '<center>Your Score is: ' + s + '/' + size + '</center></b></font><br>');
+					$('.questions').after('<font color="brown"><b><center>Total time taken : ' + mintaken + " minutes " + sectaken + " seconds " + '<center>Your Score is: ' + s + '/' + size + '</center></b></font><br>');
 					$("body").animate({ scrollTop: $(document).height()-$(window).height() });
 					submited = true;
 					wrapper('.discuss', "click", function(e, that) {
