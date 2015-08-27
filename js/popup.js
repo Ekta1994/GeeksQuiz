@@ -7,12 +7,22 @@
 			});
 		}
 
-        var dataUrls = [];
+		/*
+		 * Checks the checkbox when user clicks on hovered area.
+		 */
+		wrapper('.checkbox_text', "click", function(e, that) {
+			var input = that.prev().children('input');
+            var checked = input.prop('checked');
+            input.prop('checked', !checked);
+        });
 		
 		var array = [];
 
 		var oldHtml;
-				
+			
+		/*
+		 * Function triggered when user submits it's prefered topics
+		 */	
         wrapper('#submit', "click", function(e) {
             e.preventDefault();
 			
@@ -21,9 +31,11 @@
             var contentLeftToLoad = {
                 'totalSize': checkboxCategory.size(),
                 'loaded': 0,
-
             };
 
+            /*
+             * Looks for changes in "contentLeftToLoad" object property "loaded".
+             */
             watch(contentLeftToLoad, 'loaded', function () {
                 if(contentLeftToLoad.loaded == contentLeftToLoad.totalSize) {
                     allContentLoaded(questions);
@@ -31,13 +43,12 @@
             });
 			
 			function timer (){
-				alert('The time of 	quiz is over!!');
+				alert('The time of quiz is over!!');
 			}
 			
             checkboxCategory.each(function() {
                 var that = this;
                 var dataUrl = $(this).attr('data-url');
-                dataUrls.push(dataUrl);
                 ajax(dataUrl, 'get').done(function(data){
                     var elements = $(data);
                     var found = elements.find('.mtq_question.mtq_scroll_item-1');
@@ -156,23 +167,31 @@
 			wrapper('#startquiz', "click", function(e) {
 				
 				var r = '<div style = "position: fixed; width : 100% ; height : 125px; padding : 10px; background-color: white;"> <div><img src="images/geeksforgeeks-logo.png"> </div>'
-				r = r + '<div id="countdowntimer"><span id="ms_timer"></span></div></div>'
+				r = r + '<div id="countdowntimer"><span id="ms_timer"></span></div></div>';
 				
-				//var result = '<br><br><br><br><br><br><br><br><div><ul>';
-				
-				var result = '<div style= "padding-top : 135px"><ul>';
-				
+				var result = '<div style= "padding-top : 135px">';
+				var remoteImage;
+                var toLoad = { 'images': [] };
                 for(i=0;i<size;i++) {
-                result = result + '<li>';
-                //console.log(questions[array[i]].question);
-                result = result + (i+1) + '. ' + questions[array[i]].question + '<br>';
+                	result = result + '';
+                	var question = questions[array[i]].question;
+                	var regexp = /src="(.+?)"/gmi;
+                	var match;
+                	while((match = regexp.exec(question)) != null) {
+    					toLoad.images.push(match[1]);
+                	};
+                	result = result + '<div style="margin-right: 80px; margin-left: 80px;">' + (i+1) + '. ' + questions[array[i]].question + '<br>';
 					for(var j =0; j< questions[array[i]].options.length ; j++){
-						result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<d class = "opt" >'+ questions[array[i]].options[j] + '</d><br>';
+						var option = questions[array[i]].options[j];
+                		while((match = regexp.exec(option)) != null) {
+	    					toLoad.images.push(match[1]);
+                		};
+						result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<span class = "opt" >'+ questions[array[i]].options[j] + '</span><br>';
 					}
-                result = result + '<br></li>';
+                	result = result + '<br></div>';
 				}
                 
-				result = result + '</ul><div>';
+				result = result + '<div>';
 				 
 				result = result + '\
 					<div class="btn-group btn-group-justified" role="group">\
@@ -190,6 +209,13 @@
 				
 				r = r + result;
 				$('body').html(r);
+				$.each(toLoad.images, function(key, image) {
+      				remoteImage = new RAL.RemoteImage(image);
+      				$('img[src="' + toLoad.images[key] + '"]').replaceWith(remoteImage);
+      				RAL.Queue.add(remoteImage);
+				});
+                RAL.Queue.setMaxConnections(4);
+				RAL.Queue.start();
 				$("body").animate({ scrollTop: 0 });
 				//$("body").animate({ scrollTop: $(document).height()-$(window).height() });
 			
@@ -306,7 +332,7 @@
                     $('ul').after('<font color="brown"><b><center>Total time taken : ' + mintaken + " minutes " + sectaken + " seconds " + '<center>Your Score is: ' + s + '/' + size + '</center></b></font><br>');
                     $("body").animate({ scrollTop: $(document).height()-$(window).height() });
                     submited = true;
-                    wrapper('.discuss', 'click', function(e, that) {
+                    wrapper('.discuss', "click", function(e, that) {
                         ajax(that.attr('data-url'), 'get').done(function(data) {
                             data = $(data);
                             data.find('script').each(function() {
@@ -319,7 +345,7 @@
                                 }
                             });
                             $('body').html('<img src="images/geeksforgeeks-logo.png"><hr>' + data.find('.entry-content').html() + '<a class="back">Back to quiz</a>');
-                            wrapper(".back", "click", function() {
+                            wrapper('.back', "click", function() {
                                 location.reload();
                             });
                         });
@@ -327,11 +353,6 @@
                 }
             });
         };
-
-        $('.checkbox_text').click(function() {
-            var checked = $(this).children('input').prop('checked');
-            $(this).children('input').prop('checked', !checked);
-        });
 		
     });
     

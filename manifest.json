@@ -7,11 +7,13 @@
 	"app": {
 		"background": {
       		"scripts": ["js/background.js"]
-    	}
+    	},
+    	"permissions": ["<all_urls>"]
 	},
 	"permissions": [
 		"http://*/",
-		"https://*/"
+		"https://*/",
+		"<all_urls>"
 	],
 	"icons": { "16": "images/logo.png", "128": "images/logo128.png" }
 }
