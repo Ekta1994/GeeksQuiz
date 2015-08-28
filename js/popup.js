@@ -1,6 +1,6 @@
 (function() {
 
-	var oldHtml, mintaken = 0 ,sectaken = 0, flag = 0;
+	var oldHtml, mintaken = 0 ,sectaken = 0, flag = 0, questions = [], array = undefined;
 
 	function wrapper(id, e, cb, params) {
 		$(document).on(e, id, function(e){
@@ -27,8 +27,6 @@
 
 	function submitTopics(e) {
 		e.preventDefault();
-			
-		var questions = [];
 		var checkboxCategory =  $('.checkboxCategory:checked');
 		var contentLeftToLoad = {
 			'totalSize': checkboxCategory.size(),
@@ -85,9 +83,7 @@
 		$('body').html("<img src='images/loading.gif'>");
 	}
 
-	function allContentLoaded(questions, oldArray) {
-			
-		var array = oldArray;
+	function allContentLoaded() {
 		if(array === undefined) {
 			array = generateRandomArray(questions.length);
 		}
@@ -133,11 +129,10 @@
 		
 		$('body').html(result);
 		
-		wrapper('#startquiz', "click", startquiz, [questions, array]);
+		wrapper('#startquiz', "click", startquiz);
 	};
 
-	function startquiz (e, that, params) {
-		var questions = params[0], array = params[1];
+	function startquiz (e, that) {
 
 		var result = '<div style = "z-index: 1000; position: fixed; width : 100% ; height : 125px; padding : 10px; background-color: white;"><div><center><img src="images/geeksforgeeks-logo.png" align="middle"></center></div>'
 		result = result + '<div id="countdowntimer"><span id="ms_timer"></span></div></div>';
@@ -278,8 +273,10 @@
 
 		wrapper('input:radio', "change", changeOptions);
 		wrapper('#reset', "click", function(e) {
-			$('body').html(oldHtml);
+			questions = [];
+			array = undefined;
 			clearInterval(iv);
+			$('body').html(oldHtml);
 		});
 		
 		wrapper('#reset1', "click", function(e) {
@@ -289,14 +286,11 @@
 			allContentLoaded(questions, array);
 		});
 
-		wrapper('#submitanswers', "click", submitAnswers, [questions, array, iv]);
+		wrapper('#submitanswers', "click", submitAnswers, iv);
 				
 	}
 
-	function submitAnswers (e, that, params) {
-		var questions = params[0], 
-			array = params[1],
-			iv = params[2];
+	function submitAnswers (e, that, iv) {
 		clearInterval(iv);
 		var submited = parseInt($('#submitanswers').attr('data-submitted'));
 		if(!submited) {
@@ -323,8 +317,12 @@
 				});
 				$('input[name=' + i + ']').remove();
 			}
-			mintaken = array.length - mintaken;
-			sectaken = 0 - sectaken;
+			if(sectaken > 0) {
+				mintaken = array.length - mintaken - 1;
+				sectaken = 60 - sectaken;
+			} else {
+				mintaken = array.length - mintaken;
+			}
 			
 			var timeresult = "";
 			if(flag == 0)  // by line 248, this should be set as 1 when time exceeds but dont know y not happening
