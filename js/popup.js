@@ -344,9 +344,29 @@
 							that.remove();
 						}
 					});
-					$('body').html('<center><img src="images/geeksforgeeks-logo.png" align="middle"></center><hr>' + data.find('.entry-content').html() + '<a class="back">Back to quiz</a>');
-					wrapper('.back', "click", function() {
-						location.reload();
+					var result = '\
+						<div style = "z-index: 1000; position: fixed; width : 100% ; height : 125px; padding : 10px; background-color: white;">\
+							<div>\
+								<center>\
+									<img src="images/geeksforgeeks-logo.png" align="middle">\
+								</center>\
+							</div>\
+						</div>\
+						<div class="questions" style= "padding-top : 135px">\
+							<div style="margin-right: 80px; margin-left: 80px;">'
+							+ data.find('.entry-content').html() +
+							'<div class="btn-group pull-right" style="margin-right: 80px; margin-left: 50px; margin-bottom: 50px" role="group">\
+            					<div class="btn-group" role="group">\
+                					<button class="btn btn-success" type="submit" id="back">Back</button>\
+            					</div>\
+        					</div>\
+        					</div>\
+						</div>';
+					var body = $('body').html();
+					$('body').html(result);
+					$("body").animate({ scrollTop: 0 });
+					wrapper('#back', "click", function() {
+						$('body').html(body);
 					});
 				});
 			});
