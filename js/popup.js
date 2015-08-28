@@ -1,5 +1,7 @@
 (function() {
 
+	var oldHtml, mintaken = 0 ,sectaken = 0, flag = 0;
+
 	function wrapper(id, e, cb, params) {
 		$(document).on(e, id, function(e){
 			cb(e, $(this), params);
@@ -16,8 +18,6 @@
 			var checked = input.prop('checked');
 			input.prop('checked', !checked);
 		});
-
-		var oldHtml;
 			
 		/*
 		 * Function triggered when user submits it's prefered topics
@@ -34,6 +34,11 @@
 			'totalSize': checkboxCategory.size(),
 			'loaded': 0,
 		};
+
+		if(contentLeftToLoad.totalSize == 0) {
+			$('#myModal').modal('show');
+			return;
+		}
 
 		/*
 			* Looks for changes in "contentLeftToLoad" object property "loaded".
@@ -59,7 +64,6 @@
 					ans = $(ans).attr('id');
 					var discuss = val.find('.mtq_answer_table').next().next().children('a').attr('href');
 					var match = regexp.exec(ans);
-					//console.log(match);
 					ans = match[1];
 					var options = [];
 					$.each(optionsHtml, function(key, val){
@@ -88,22 +92,44 @@
 			array = generateRandomArray(questions.length);
 		}
 			
-		var result = '<img src="images/geeksforgeeks-logo.png">  <hr><div><ul>';
-		var instructions = [];
+		var result = '\
+			<div style = "z-index: 1000; position: fixed; width : 100% ; height : 125px; padding : 10px; background-color: white;">\
+				<div>\
+					<center>\
+						<img src="images/geeksforgeeks-logo.png" align="middle">\
+					</center>\
+				</div>\
+			</div>\
+			<div class="questions" style= "padding-top : 135px">\
+				<div style="margin-right: 80px; margin-left: 80px;">\
+					Please read the below instructions carefully : \
+					<ul>\
+						<li> The test will have maximum 20 questions </li>\
+						<li> The questions will only be from the category you have selected. </li>\
+						<li>A timer will be running displaying the time left for you at that instant.</li>\
+						<li> You will be given 10 minutes at maximum to complete the test. </li> \
+						<li>If you wish to submit before the maximum time limit, click on <b><i> Submit </b></i> button. </li>\
+					</ul>\
+					<div class="btn-group" role="group" style="padding: 5px;">\
+		 				<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="startquiz">Start the quiz</button>\
+		 			</div>\
+		 			<div class="btn-group" role="group" style="padding: 5px;">\
+		 				<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Select the topics again</button>\
+		 			</div>\
+				</div>\
+			</div>';
+		// instructions = '<div>\
+  //           	Please read the below instructions carefully : <br><br> <ul> <li> The test will have maximum 20 questions </li> <li> The questions will only be from the category you have selected. </li>';
+		// instructions += '<li>A timer will be running displaying the time left for you at that instant.</li> <li> You will be given 10 minutes at maximum to complete the test. </li> ';
+		// instructions += '<li>If you wish to submit before the maximum time limit, click on <b><i> Submit </b></i> button. </li> <br></ul> ';
 			
-		instructions = 'Please read the below instructions carefully : <br><br> <ul> <li> The test will have maximum 20 questions </li> <li> The questions will only be from the category you have selected. </li>';
-		instructions += '<li>A timer will be running displaying the time left for you at that instant.</li> <li> You will be given 10 minutes at maximum to complete the test. </li> ';
-		instructions += '<li>If you wish to submit before the maximum time limit, click on <b><i> Submit </b></i> button. </li> <br></ul> ';
-			
-		instructions += '<div class="btn-group" role="group" style="padding: 5px;">\
-					<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="startquiz">Start the quiz</button>\
-				</div>';
+		// instructions += '<div class="btn-group" role="group" style="padding: 5px;">\
+		// 			<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="startquiz">Start the quiz</button>\
+		// 		</div>';
 				
-		instructions += '<div class="btn-group" role="group" style="padding: 5px;">\
-						<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Select the topics again</button>\
-					</div>'
-		
-		result = result + instructions;
+		// instructions += '<div class="btn-group" role="group" style="padding: 5px;">\
+		// 				<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Select the topics again</button>\
+		// 			</div></div>'
 		
 		$('body').html(result);
 		
@@ -112,9 +138,8 @@
 
 	function startquiz (e, that, params) {
 		var questions = params[0], array = params[1];
-		var flag = 0;
 
-		var result = '<div style = "z-index: 1000; position: fixed; width : 100% ; height : 125px; padding : 10px; background-color: white;"> <div><img src="images/geeksforgeeks-logo.png"> </div>'
+		var result = '<div style = "z-index: 1000; position: fixed; width : 100% ; height : 125px; padding : 10px; background-color: white;"><div><center><img src="images/geeksforgeeks-logo.png" align="middle"></center></div>'
 		result = result + '<div id="countdowntimer"><span id="ms_timer"></span></div></div>';
 		result = result + '<div class="questions" style= "padding-top : 135px">';
 		var toLoad = { 'images': [] };
@@ -150,6 +175,23 @@
 				</div>\
 			</div>';
 		result = result + '<br><br>';
+		result = result + '\
+			<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">\
+				<div class="modal-dialog" role="document">\
+					<div class="modal-content">\
+    					<div class="modal-header">\
+        					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>\
+        					<h3 id="myModalLabel">Time over</h3>\
+    					</div>\
+    					<div class="modal-body">\
+        					<p>You have exceeded the time limit! But you can continue to take the test but it will not be evaluated.</p>\
+    					</div>\
+    					<div class="modal-footer">\
+        					<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>\
+    					</div>\
+    				</div>\
+    			</div>\
+			</div>';
 		$('body').html(result);
 		
 		for (var i = 0; i < toLoad.images.length; ++i) {
@@ -174,10 +216,11 @@
 
 		$("body").animate({ scrollTop: 0 });
 		// $("body").animate({ scrollTop: $(document).height()-$(window).height() });
-		var mintaken ,sectaken,iv;
-		var ct = 0;
-		var s = 59;
-		var f  = 0;
+		mintaken = 0;
+		sectaken = 0;
+		var iv;
+		var ct = array.length;
+		var s = 0;
 		var countDown = function() {
 			var elem = $(this);
 			var display = function() {
@@ -199,8 +242,8 @@
 				if ( ct == -1 )
 				{
 					flag = 1;
-					// alert("You have exceeded the time limit! The quiz without the time limit will be reloaded now.");
-					//allContentLoaded(questions, array);
+					elem.html('<div align = "center">Time Over</div><hr>');
+					$('#myModal').modal('show');
 					clearInterval(iv);
 				}
 				
@@ -246,17 +289,14 @@
 			allContentLoaded(questions, array);
 		});
 
-		wrapper('#submitanswers', "click", submitAnswers, [questions, array, mintaken ,sectaken,iv, flag]);
+		wrapper('#submitanswers', "click", submitAnswers, [questions, array, iv]);
 				
 	}
 
 	function submitAnswers (e, that, params) {
 		var questions = params[0], 
-			array = params[1], 
-			mintaken = params[2], 
-			sectaken = params[3],
-			iv = params[4],
-			flag = params[5];
+			array = params[1],
+			iv = params[2];
 		clearInterval(iv);
 		var submited = parseInt($('#submitanswers').attr('data-submitted'));
 		if(!submited) {
@@ -283,15 +323,15 @@
 				});
 				$('input[name=' + i + ']').remove();
 			}
-			mintaken = 0 - mintaken;
-			sectaken = 59 - sectaken;
+			mintaken = array.length - mintaken;
+			sectaken = 0 - sectaken;
 			
-			var timeresult = "";			
+			var timeresult = "";
 			if(flag == 0)  // by line 248, this should be set as 1 when time exceeds but dont know y not happening
 				timeresult = 'Total time taken : ' + mintaken + " minutes " + sectaken + " seconds ";
 			else if ( flag == 1)
 				timeresult = "You exceeded the time limit";			
-			$('.questions').after('<font color="brown"><b><center>Total time taken : ' + mintaken + " minutes " + sectaken + " seconds " + '<center>Your Score is: ' + s + '/' + array.length + '</center></b></font><br>');
+			$('.questions').after('<font color="brown"><b><center>' + timeresult + '<center>Your Score is: ' + s + '/' + array.length + '</center></b></font><br>');
 			$("body").animate({ scrollTop: $(document).height()-$(window).height() });
 			$('#submitanswers').attr('data-submitted', 1);
 			wrapper('.discuss', "click", function(e, that) {
@@ -306,7 +346,7 @@
 							that.remove();
 						}
 					});
-					$('body').html('<img src="images/geeksforgeeks-logo.png"><hr>' + data.find('.entry-content').html() + '<a class="back">Back to quiz</a>');
+					$('body').html('<center><img src="images/geeksforgeeks-logo.png" align="middle"></center><hr>' + data.find('.entry-content').html() + '<a class="back">Back to quiz</a>');
 					wrapper('.back', "click", function() {
 						location.reload();
 					});

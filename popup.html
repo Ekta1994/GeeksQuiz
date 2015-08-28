@@ -21,7 +21,7 @@
     </head>
     <body>
 		<div style = "z-index: 1000; position: fixed; width : 100% ; height : 125px; padding : 10px; background-color: white;">
-            <img src="images/geeksforgeeks-logo.png" align="middle"><hr>
+            <center><img src="images/geeksforgeeks-logo.png" align="middle"></center><hr>
 		</div>
 		<div style = "padding-top : 135px">
         <div class="panel-group" id="accordion">
@@ -715,11 +715,27 @@
                 </div>
             </div>
         </div>
-        <div class="btn-group pull-right" style="margin-right: 80px; margin-left: 50px;" role="group">
+        <div class="btn-group pull-right" style="margin-right: 80px; margin-left: 50px; margin-bottom: 50px" role="group">
             <div class="btn-group" role="group">
                 <button class="btn btn-success" type="submit" id="submit">Generate Quiz</button>
             </div>
         </div>
 		</div>
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                        <h3 id="myModalLabel">Select Topics</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>Select atleast one topic from the list.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
