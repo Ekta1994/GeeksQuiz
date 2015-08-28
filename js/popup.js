@@ -80,7 +80,20 @@
 			});
 		});
 		oldHtml = $('body').html();
-		$('body').html("<img src='images/loading.gif'>");
+		
+		var wait = '\
+		<div>\
+					<center>\
+						<img src="images/geeksforgeeks-logo.png" align="middle">\
+						<br><br><br>\
+						<b><i>Please wait whle we are loading your quiz</i></b>\
+						<br><br><img src = "images/loading.gif">\
+					</center>\
+				</div>\
+				';
+		//var wait = '<img src= "images/loading.gif" align = "middle" >';
+		//$('body').html("<img src='images/loading.gif'>");
+		$('body').html(wait);
 	}
 
 	function allContentLoaded() {
@@ -97,15 +110,18 @@
 				</div>\
 			</div>\
 			<div class="questions" style= "padding-top : 135px">\
-				<div style="margin-right: 80px; margin-left: 80px;">\
-					Please read the below instructions carefully : \
-					<ul>\
-						<li> The test will have maximum 20 questions </li>\
-						<li> The questions will only be from the category you have selected. </li>\
-						<li>A timer will be running displaying the time left for you at that instant.</li>\
-						<li> You will be given 10 minutes at maximum to complete the test. </li> \
-						<li>If you wish to submit before the maximum time limit, click on <b><i> Submit </b></i> button. </li>\
+				<div style="margin-right: 80px; margin-left: 80px;" align = "center">\
+					<b>Please read the below instructions carefully : </b><br>\
+					<ul style = "list-style-position : inside">\
+						<li> The test will have maximum 20 questions </li><br>\
+						<li> The questions will only be from the category you have selected. </li><br>\
+						<li>A timer will be running displaying the time left for you at that instant.</li><br>\
+						<li> You will be given some specified time according to the number of questions to complete the test. </li><br> \
+						<li>If you wish to submit before the maximum time limit, click on <b><i> Submit </b></i> button. </li><br>\
+						<li>After you click on Submit, your score and total time taken will be displayed in the bottom of the quiz page. </li><br>\
+						<li>A pop-up will appear if you are unable to complete the quiz in specified time. You can further attempt the quiz, your score will be evaluated but not the time </li><br>\
 					</ul>\
+					<br><br>\
 					<div class="btn-group" role="group" style="padding: 5px;">\
 		 				<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="startquiz">Start the quiz</button>\
 		 			</div>\
