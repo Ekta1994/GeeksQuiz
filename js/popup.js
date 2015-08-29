@@ -130,20 +130,14 @@
 		 			</div>\
 				</div>\
 			</div>';
-		// instructions = '<div>\
-  //           	Please read the below instructions carefully : <br><br> <ul> <li> The test will have maximum 20 questions </li> <li> The questions will only be from the category you have selected. </li>';
-		// instructions += '<li>A timer will be running displaying the time left for you at that instant.</li> <li> You will be given 10 minutes at maximum to complete the test. </li> ';
-		// instructions += '<li>If you wish to submit before the maximum time limit, click on <b><i> Submit </b></i> button. </li> <br></ul> ';
-			
-		// instructions += '<div class="btn-group" role="group" style="padding: 5px;">\
-		// 			<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="startquiz">Start the quiz</button>\
-		// 		</div>';
-				
-		// instructions += '<div class="btn-group" role="group" style="padding: 5px;">\
-		// 				<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Select the topics again</button>\
-		// 			</div></div>'
-		
+
 		$('body').html(result);
+		wrapper('#reset', "click", function(e) {
+			questions = [];
+			array = undefined;
+			if(typeof iv !== 'undefined') clearInterval(iv);
+			$('body').html(oldHtml);
+		});
 		
 		wrapper('#startquiz', "click", startquiz);
 	};
@@ -288,12 +282,6 @@
 		});
 
 		wrapper('input:radio', "change", changeOptions);
-		wrapper('#reset', "click", function(e) {
-			questions = [];
-			array = undefined;
-			clearInterval(iv);
-			$('body').html(oldHtml);
-		});
 		
 		wrapper('#reset1', "click", function(e) {
 			ct = 1;
