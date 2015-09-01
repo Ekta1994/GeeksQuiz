@@ -116,8 +116,8 @@
 				</div>\
 			</div>\
 			<div class="questions" style= "padding-top : 135px">\
-				<div style="margin-right: 80px; margin-left: 80px;" align = "center">\
-					<b>Please read the below instructions carefully : </b><br>\
+				<div style="margin-right: 80px; margin-left: 80px;">\
+					<b>Please read the below instructions carefully : </b><br><br>\
 					<ul style = "list-style-position : inside">\
 						<li> The test will have maximum 20 questions </li><br>\
 						<li> The questions will only be from the category you have selected. </li><br>\
@@ -128,11 +128,11 @@
 						<li>A pop-up will appear if you are unable to complete the quiz in specified time. You can further attempt the quiz, your score will be evaluated but not the time </li><br>\
 					</ul>\
 					<br><br>\
-					<div class="btn-group" role="group" style="padding: 5px;">\
-		 				<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="startquiz">Start the quiz</button>\
+		 			<div class="btn-group pull-right" role="group" style="padding: 5px;">\
+		 				<button class="btn btn-warning btn-block" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Exit Quiz</button>\
 		 			</div>\
-		 			<div class="btn-group" role="group" style="padding: 5px;">\
-		 				<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Select the topics again</button>\
+		 			<div class="btn-group pull-right" role="group" style="padding: 5px;">\
+		 				<button class="btn btn-success btn-block" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="startquiz">Start Quiz</button>\
 		 			</div>\
 				</div>\
 			</div>';
@@ -168,7 +168,7 @@
 				while((match = regexp.exec(option)) != null) {
 					toLoad.images.push(match[1]);
 				};
-				result = result + '<div class="row"><div style="float:left"><input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '</div><div class = "opt col-md-11">'+ questions[array[i]].options[j] + '</div></div>';
+				result = result + '<div class="row" style=" margin-left: 10px;"><div style="float:left"><input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '</div><div class = "opt col-md-11">'+ questions[array[i]].options[j] + '</div></div>';
 			}
 			result = result + '<br></div>';
 		}
@@ -176,13 +176,13 @@
 		result = result + '\
 			<div class="btn-group pull-right" style="margin-right: 80px; margin-left: 80px; margin-bottom: 10px;" role="group">\
 				<div class="btn-group" role="group" style="padding: 5px;">\
-					<button class="btn btn-success" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "submitanswers" data-submitted=0>Submit Quiz</button>\
+					<button class="btn btn-success btn-block" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "submitanswers" data-submitted=0>Submit Quiz</button>\
 				</div>\
 				<div class="btn-group" role="group" style="padding: 5px;">\
-					<button class="btn btn-warning" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset1">Reset Selections</button>\
+					<button class="btn btn-warning btn-block" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset1">Reset Selections</button>\
 				</div>\
 				<div class="btn-group" role="group" style="padding: 5px;">\
-					<button class="btn btn-danger" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Exit Quiz</button>\
+					<button class="btn btn-danger btn-block" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Exit Quiz</button>\
 				</div>\
 			</div>';
 		result = result + '<br><br>';
