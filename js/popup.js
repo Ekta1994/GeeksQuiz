@@ -69,7 +69,6 @@
 					$.each(optionsHtml, function(key, val){
 						val = $(val);
 						var option = val.html().trim();
-						console.log(option);
 						option = option.replace(/^(<br>\s*)+/, '');
 						option = option.replace(/(<br>\s*)+$/, '');
 						options.push(option);
@@ -129,7 +128,7 @@
 					</ul>\
 					<br><br>\
 		 			<div class="btn-group pull-right" role="group" style="padding: 5px;">\
-		 				<button class="btn btn-warning btn-block" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Exit Quiz</button>\
+		 				<button class="btn btn-warning btn-block" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="reset">Reset Topics</button>\
 		 			</div>\
 		 			<div class="btn-group pull-right" role="group" style="padding: 5px;">\
 		 				<button class="btn btn-success btn-block" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="startquiz">Start Quiz</button>\
@@ -168,7 +167,7 @@
 				while((match = regexp.exec(option)) != null) {
 					toLoad.images.push(match[1]);
 				};
-				result = result + '<div class="row" style=" margin-left: 10px;"><div style="float:left"><input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '</div><div class = "opt col-md-11">'+ questions[array[i]].options[j] + '</div></div>';
+				result = result + '<div class="row hover_text" style=" margin-left: 10px;"><div style="float:left"><input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '</div><div class = "opt col-md-11">'+ questions[array[i]].options[j] + '</div></div>';
 			}
 			result = result + '<br></div>';
 		}
@@ -264,30 +263,17 @@
 		
 		$("#ms_timer").each(countDown);
 		
-		$(".opt").mouseover(function () {
+		wrapper(".opt", "mouseover", function () {
 			$(this).css("font-weight", "bold");
 		});
 			
-		$(".opt").mouseout(function () {
+		wrapper(".opt", "mouseout", function () {
 			$(this).css("font-weight", "normal");
 		});
 
-		var changeOptions =  function(e, that) {
-			var selectedOptions = []
-			$.each($('input:checked'), function() {
-				var ele = $(this);
-				var optionChoosed = ele.val();
-				var question = ele.attr('name');
-				selectedOptions.push({'optionChoosed':optionChoosed, 'question':question});
-			});
-		}
-
 		wrapper('.opt', "click", function(e, that) {
-			$(that).prev().prop("checked", true);
-			changeOptions(e, $(that).prev());
+			that.prev().children('input').prop("checked", true);
 		});
-
-		wrapper('input:radio', "change", changeOptions);
 		
 		wrapper('#reset1', "click", function(e) {
 			ct = 1;
@@ -310,19 +296,21 @@
 			for(i = 0; i< array.length ; i++){
 				var ansSelected = $('input[name=' + i + ']:checked').attr('value');
 				$.each($('input[name=' + i + ']'), function (key, val) {
-					val = $(val).next();
-					val.text((key+1) + '. ' + val.text())
-					val.css('font-weight', 'bold');
+					$(val).parent().next().html((key+1) + '. ' + $(val).parent().next().html())
+					// $(val).parent().next().css('font-weight', 'bold');
+					val = $(val).parent().parent().parent();
 					if(key+1 == questions[array[i]].options.length) {
-						val.html(val.html() + '<br><br><a class="discuss" data-url="' + questions[array[i]].discuss + '" >Discuss</a>');
-						val.html(val.html() + '<br>' + '<font color="green"><b>Solution is option: ' + questions[array[i]].answer + '</b></font>');
+						var result = '<div class="row" style=" margin-left: 10px;"><a class="discuss" data-url="' + questions[array[i]].discuss + '" >Discuss</a>';
+						result += '<br>' + '<font color="green"><b>Solution is option: ' + questions[array[i]].answer + '</b></font>';
 						if(ansSelected != questions[array[i]].answer && ansSelected != undefined) {
-							val.html(val.html() + '<br>' + '<font color="red"><b>Incorrect, Option Selected: ' + ansSelected + '</b></font>');
+							result += '<br>' + '<font color="red"><b>Incorrect, Option Selected: ' + ansSelected + '</b></font>';
 						}
 						if(ansSelected == questions[array[i]].answer) {
 							++s;
-							val.html(val.html() + '<br>' + '<font color="green"><b>Correct</b></font>');
+							result += '<br>' + '<font color="green"><b>Correct</b></font>';
 						}
+						result += '</div><br><br>';
+						val.append(result);
 					}
 				});
 				$('input[name=' + i + ']').remove();
