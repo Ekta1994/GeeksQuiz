@@ -55,7 +55,9 @@
 				var found = elements.find('.mtq_question.mtq_scroll_item-1');
 				$.each(found, function(key, val){
 					val = $(val);
-					var question = val.children('.mtq_question_text').html();
+					var question = val.children('.mtq_question_text').html().trim();
+					question = question.replace(/^(<br>\s*)+/, '');
+					question = question.replace(/(<br>\s*)+$/, '');
 					var optionsHtml = val.find('.mtq_answer_text');
 					var ans = val.find('.mtq_marker.mtq_correct_marker');
 					var regexp = /mtq_marker-\d+-(\d+)-\d+/g;
@@ -66,7 +68,11 @@
 					var options = [];
 					$.each(optionsHtml, function(key, val){
 						val = $(val);
-						options.push(val.html());
+						var option = val.html().trim();
+						console.log(option);
+						option = option.replace(/^(<br>\s*)+/, '');
+						option = option.replace(/(<br>\s*)+$/, '');
+						options.push(option);
 					});
 					
 					questions.push({
@@ -162,13 +168,13 @@
 				while((match = regexp.exec(option)) != null) {
 					toLoad.images.push(match[1]);
 				};
-				result = result + '<input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '<span class = "opt" >'+ questions[array[i]].options[j] + '</span><br>';
+				result = result + '<div class="row"><div style="float:left"><input name = "' + (i) + '" type = "radio" value="' + (j+1) + '">' + '</div><div class = "opt col-md-11">'+ questions[array[i]].options[j] + '</div></div>';
 			}
 			result = result + '<br></div>';
 		}
 		result = result + '</div>';
 		result = result + '\
-			<div class="btn-group btn-group-justified" role="group">\
+			<div class="btn-group pull-right" style="margin-right: 80px; margin-left: 80px; margin-bottom: 10px;" role="group">\
 				<div class="btn-group" role="group" style="padding: 5px;">\
 					<button class="btn btn-success" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "submitanswers" data-submitted=0>Submit Quiz</button>\
 				</div>\
