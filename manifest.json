@@ -2,7 +2,7 @@
 {
 	"manifest_version": 2,
 	"name":"GeeksQuiz",
-	"description": "Generate random quiz from geeksquiz.",
+	"description": "The aim of the app is to generate random quiz from the site www.geeksquiz.com . It allows the user to select any number of topics from the list provided and attempt a quiz of maximum 20 questions. A particular time will be provided to complete the quiz and score will be generated after the time expires. Also, a discuss option is provided for seeing the correct explanation.",
 	"version": "1.0",
 	"app": {
 		"background": {

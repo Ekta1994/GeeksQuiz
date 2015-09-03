@@ -335,13 +335,6 @@
 						}
 					});
 					var result = '\
-						<div style = "z-index: 1000; position: fixed; width : 90% ; height : 125px; padding : 10px;">\
-							<div>\
-								<center>\
-									<img src="images/geeksforgeeks-logo.png" align="middle">\
-								</center>\
-							</div>\
-						</div>\
 						<div class="questions" style= "padding-top : 135px">\
 							<div style="margin-right: 80px; margin-left: 80px;">'
 							+ data.find('.entry-content').html() +
