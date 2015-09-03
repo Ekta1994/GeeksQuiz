@@ -323,11 +323,33 @@
 			}
 			
 			var timeresult = "";
-			if(flag == 0)  // by line 248, this should be set as 1 when time exceeds but dont know y not happening
-				timeresult = 'Total time taken : ' + mintaken + " minutes " + sectaken + " seconds ";
+			if(flag == 0){
+				timeresult = 'Total time taken : ' + mintaken + " minutes " + sectaken + " seconds <br>";
+				timeresult += 'Your Score is: ' + s + '/' + array.length ;
+			}
 			else if ( flag == 1)
 				timeresult = "You exceeded the time limit";			
-			$('.questions').after('<font color="brown"><b><center>' + timeresult + '<center>Your Score is: ' + s + '/' + array.length + '</center></b></font><br>');
+			//$('.questions').after('<font color="brown"><b><center>' + timeresult + '<center>Your Score is: ' + s + '/' + array.length + '</center></b></font><br>');
+			
+			re = '<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">\
+				<div class="modal-dialog" role="document">\
+					<div class="modal-content">\
+    					<div class="modal-header">\
+        					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>\
+							<h3 id="myModalLabel">Analysis</h3>\
+    					</div>\
+    					<div class="modal-body">\
+        					<p>' + timeresult + '</p>\
+    					</div>\
+    					<div class="modal-footer">\
+        					<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>\
+    					</div>\
+    				</div>\
+    			</div>\
+			</div>';
+			//result = result + "Popup added";
+			$('.questions').after(re);
+			$('#myModal').modal('show');
 			$("body").animate({ scrollTop: $(document).height()-$(window).height() });
 			$('#submitanswers').attr('data-submitted', 1);
 			wrapper('.discuss', "click", function(e, that) {
