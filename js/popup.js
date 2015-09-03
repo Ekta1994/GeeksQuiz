@@ -91,7 +91,7 @@
 					<center>\
 						<img src="images/geeksforgeeks-logo.png" align="middle">\
 						<br><br><br>\
-						<b><i>Please wait whle we are loading your quiz</i></b>\
+						<b><i>Please wait while we are loading your quiz</i></b>\
 						<br><br><img src = "images/loading.gif">\
 					</center>\
 				</div>\
@@ -123,8 +123,8 @@
 						<li>A timer will be running displaying the time left for you at that instant.</li><br>\
 						<li> You will be given some specified time according to the number of questions to complete the test. </li><br> \
 						<li>If you wish to submit before the maximum time limit, click on <b><i> Submit </b></i> button. </li><br>\
-						<li>After you click on Submit, your score and total time taken will be displayed in the bottom of the quiz page. </li><br>\
-						<li>A pop-up will appear if you are unable to complete the quiz in specified time. You can further attempt the quiz, your score will be evaluated but not the time </li><br>\
+						<li>After you click on Submit, your score and total time taken will be displayed in a popup and also in the bottom of the quiz page. </li><br>\
+						<li>You will be alerted if you are unable to complete the quiz in specified time. You can further attempt the quiz, your score will be evaluated but not the time </li><br>\
 					</ul>\
 					<br><br>\
 		 			<div class="btn-group pull-right" role="group" style="padding: 5px;">\
@@ -329,16 +329,15 @@
 			}
 			else if ( flag == 1)
 				timeresult = "You exceeded the time limit";			
-			//$('.questions').after('<font color="brown"><b><center>' + timeresult + '<center>Your Score is: ' + s + '/' + array.length + '</center></b></font><br>');
 			
-			re = '<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">\
+			re = '<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" width : "100%"">\
 				<div class="modal-dialog" role="document">\
 					<div class="modal-content">\
     					<div class="modal-header">\
         					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>\
 							<h3 id="myModalLabel">Analysis</h3>\
     					</div>\
-    					<div class="modal-body">\
+    					<div class="modal-body" width : "100%">\
         					<p>' + timeresult + '</p>\
     					</div>\
     					<div class="modal-footer">\
@@ -347,11 +346,12 @@
     				</div>\
     			</div>\
 			</div>';
-			//result = result + "Popup added";
-			$('.questions').after(re);
+			var e = '<font color="brown"><b><center>' + timeresult ;
+			$('.questions').after(re + e);
 			$('#myModal').modal('show');
 			$("body").animate({ scrollTop: $(document).height()-$(window).height() });
 			$('#submitanswers').attr('data-submitted', 1);
+			
 			wrapper('.discuss', "click", function(e, that) {
 				ajax(that.attr('data-url'), 'get').done(function(data) {
 					data = $(data);
@@ -365,7 +365,7 @@
 						}
 					});
 					var result = '\
-						<div style = "z-index: 1000; position: fixed; width : 100% ; height : 125px; padding : 10px; background-color: white;">\
+						<div style = "z-index: 1000; position: fixed; width : 90% ; height : 125px; padding : 10px;">\
 							<div>\
 								<center>\
 									<img src="images/geeksforgeeks-logo.png" align="middle">\
@@ -375,20 +375,14 @@
 						<div class="questions" style= "padding-top : 135px">\
 							<div style="margin-right: 80px; margin-left: 80px;">'
 							+ data.find('.entry-content').html() +
-							'<div class="btn-group pull-right" style="margin-right: 80px; margin-left: 50px; margin-bottom: 50px" role="group">\
-            					<div class="btn-group" role="group">\
-                					<button class="btn btn-success" type="submit" id="back">Back</button>\
-            					</div>\
-        					</div>\
-        					</div>\
+        					'</div>\
 						</div>';
-					var body = $('body').html();
-					$('body').html(result);
-					$("body").animate({ scrollTop: 0 });
-					wrapper('#back', "click", function() {
-						$('body').html(body);
+					
+					$('#myModalLabel').text('Discuss');
+					$('.modal-body').html(result);
+					
+					$('#myModal').modal('show');
 					});
-				});
 			});
 		}
 	}
