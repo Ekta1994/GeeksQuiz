@@ -205,23 +205,7 @@
 		$('body').html(result);
 		
 		for (var i = 0; i < toLoad.images.length; ++i) {
-        	request(toLoad.images[i], i);
-    	}
-
-    	function request(site, i) {
-        	var queues = {};
-        	var http_request = new XMLHttpRequest();
-        	http_request.responseType = 'blob';
-        	http_request.open("GET", site, true);
-        	http_request.onreadystatechange = function () {
-            	var done = 4, ok = 200;
-            	if (http_request.readyState == done && http_request.status == ok) {
-                	var img = document.createElement('img');
-  					img.src = window.URL.createObjectURL(this.response);
-  					$('img[src="' + toLoad.images[i] + '"]').replaceWith(img);             
-	            }
-        	};
-	        http_request.send();
+        	requestImage(toLoad.images[i], toLoad.images[i]);
     	}
 
 		$("body").animate({ scrollTop: 0 });
@@ -330,24 +314,10 @@
 			else if ( flag == 1)
 				timeresult = "You exceeded the time limit";			
 			
-			re = '<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" width : "100%"">\
-				<div class="modal-dialog" role="document">\
-					<div class="modal-content">\
-    					<div class="modal-header">\
-        					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>\
-							<h3 id="myModalLabel">Analysis</h3>\
-    					</div>\
-    					<div class="modal-body" width : "100%">\
-        					<p>' + timeresult + '</p>\
-    					</div>\
-    					<div class="modal-footer">\
-        					<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>\
-    					</div>\
-    				</div>\
-    			</div>\
-			</div>';
+			$('#myModalLabel').text('Analysis');
+			$('.modal-body').html('<p>' + timeresult + '</p>');
 			var e = '<font color="brown"><b><center>' + timeresult ;
-			$('.questions').after(re + e);
+			$('.questions').after(e);
 			$('#myModal').modal('show');
 			$("body").animate({ scrollTop: $(document).height()-$(window).height() });
 			$('#submitanswers').attr('data-submitted', 1);
@@ -380,7 +350,9 @@
 					
 					$('#myModalLabel').text('Discuss');
 					$('.modal-body').html(result);
-					
+					data.find('img').each(function() {
+						requestImage($(this).attr('src'), $(this).attr('src'));
+					});
 					$('#myModal').modal('show');
 					});
 			});
@@ -441,6 +413,23 @@
 		}
 		return array;
 	}
+
+	function requestImage(site, src) {
+        	var queues = {};
+        	var http_request = new XMLHttpRequest();
+        	http_request.responseType = 'blob';
+        	http_request.open("GET", site, true);
+        	http_request.onreadystatechange = function () {
+            	var done = 4, ok = 200;
+            	if (http_request.readyState == done && http_request.status == ok) {
+                	var img = document.createElement('img');
+  					img.src = window.URL.createObjectURL(this.response);
+  					$('img[src="' + src + '"]').after('<br>')
+  					$('img[src="' + src + '"]').replaceWith(img);           
+	            }
+        	};
+	        http_request.send();
+    	}
 
 	function ajax(urlpassed, requestType, dynamicData) {
 		return $.ajax({
