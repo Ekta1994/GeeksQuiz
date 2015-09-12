@@ -335,7 +335,7 @@
 						}
 					});
 					var result = '\
-						<div class="questions" style= "padding-top : 135px">\
+						<div class="questions">\
 							<div style="margin-right: 80px; margin-left: 80px;">'
 							+ data.find('.entry-content').html() +
         					'</div>\
